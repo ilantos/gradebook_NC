@@ -1,1 +1,1 @@
-Gradebook project
+Gradebook project. Spring MVC
