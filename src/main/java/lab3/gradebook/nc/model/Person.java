@@ -2,7 +2,6 @@ package lab3.gradebook.nc.model;
 
 import lombok.*;
 
-import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,6 +14,4 @@ public class Person {
     private String password;
     private boolean isAdmin;
     private Location location;
-    private List<Subject> subjectsToTeachList;
-    private List<Subject> subjectsToLearnList;
 }
