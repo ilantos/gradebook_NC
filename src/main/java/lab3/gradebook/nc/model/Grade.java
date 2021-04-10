@@ -11,6 +11,6 @@ public class Grade {
     private Person person;
     private Subject subject;
     private Lesson lesson;
-    private float grade;
+    private double grade;
 
 }
