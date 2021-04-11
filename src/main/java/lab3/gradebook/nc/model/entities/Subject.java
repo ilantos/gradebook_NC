@@ -1,15 +1,16 @@
-package lab3.gradebook.nc.model;
+package lab3.gradebook.nc.model.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Location {
+public class Subject {
     private int id;
-    private Location parentLoc;
     private String title;
-    private LocType locType;
+    private String description;
+    private List<Lesson> lessons;
 }

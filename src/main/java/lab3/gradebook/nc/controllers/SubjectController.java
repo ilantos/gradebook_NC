@@ -1,6 +1,6 @@
 package lab3.gradebook.nc.controllers;
 
-import lab3.gradebook.nc.model.Subject;
+import lab3.gradebook.nc.model.entities.Subject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

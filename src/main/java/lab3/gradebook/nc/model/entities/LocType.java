@@ -1,4 +1,4 @@
-package lab3.gradebook.nc.model;
+package lab3.gradebook.nc.model.entities;
 
 public enum LocType {
     COUNTRY,
