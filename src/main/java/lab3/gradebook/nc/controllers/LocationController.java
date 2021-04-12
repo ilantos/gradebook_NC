@@ -6,6 +6,7 @@ import lab3.gradebook.nc.model.db.DAOException;
 import lab3.gradebook.nc.model.db.DaoLocation;
 import lab3.gradebook.nc.model.entities.Location;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,13 +68,18 @@ public class LocationController {
     }
 
     @PutMapping
-    @ResponseBody
-    public String edit(@RequestBody Location location) throws JsonProcessingException {
+    public ResponseEntity<?> edit(@RequestBody Location location) throws JsonProcessingException {
         try {
             daoLocation.edit(location);
-            return customFormatResponseBody.buildResponse(true, "Location edited successfully");
+            return ResponseEntity.ok(
+                    customFormatResponseBody.buildResponse(
+                            true,
+                            "Location edited successfully"));
         } catch (DAOException e) {
-            return customFormatResponseBody.buildResponse(false, "Location edited unsuccessfully");
+            return ResponseEntity.status(400).body(
+                    customFormatResponseBody.buildResponse(
+                            false,
+                            "Location edited unsuccessfully"));
         }
     }
 

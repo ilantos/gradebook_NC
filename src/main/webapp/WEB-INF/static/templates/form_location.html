@@ -1,0 +1,39 @@
+<form id="form-location" class="needs-validation" novalidate="">
+    <div class="row g-3">
+        <div class="col-12">
+            <h3 id="form-headline"><!--template--></h3>
+        </div>
+        <div class="col-4">
+            <label for="form-title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="form-title" required="">
+            <div class="invalid-feedback">
+                Please enter title.
+            </div>
+        </div>
+        <div id="form-parent-location-container">
+
+        </div>
+        <hr class="my-4">
+        <div class="col-4">
+            <label for="loc-type" class="form-label">Type of location</label>
+            <select class="form-select" id="loc-type" required="">
+                <option value="COUNTRY">COUNTRY</option>
+                <option value="CITY">CITY</option>
+                <option value="UNIVERSITY">UNIVERSITY</option>
+                <option value="GROUP">GROUP</option>
+            </select>
+            <div class="invalid-feedback">
+                Please provide a valid location type.
+            </div>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div class="row g-3">
+        <div class="col-1">
+            <button id="form-button-submit" class="btn btn-primary"></button>
+        </div>
+        <div class="col-1">
+            <button class="btn btn-danger" onclick="pageLocations()">Cancel</button>
+        </div>
+    </div>
+</form>
