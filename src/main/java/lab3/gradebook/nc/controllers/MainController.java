@@ -9,4 +9,14 @@ public class MainController {
     public String main() {
         return "index";
     }
+
+    @GetMapping("/locations")
+    public String locationPage() {
+        return "pages/locations";
+    }
+
+    @GetMapping("/addLocation")
+    public String addLocationPage() {
+        return "pages/form_add_location";
+    }
 }

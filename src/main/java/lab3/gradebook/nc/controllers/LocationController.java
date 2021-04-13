@@ -11,12 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//TODO не выбрасывать DAOException ибо это в 500 ошибку превращается
-// Сделать нормальный response. {"request":True, "message":{...}}
-// + Сделать добавление места
-// * Сделать более умное изменение. Чтобы можно было изменять id_parent, loc type
 @Controller
-@RequestMapping("/locations")
+@RequestMapping("/api/locations")
 public class LocationController {
     private DaoLocation daoLocation;
     private CustomFormatResponseBody customFormatResponseBody;

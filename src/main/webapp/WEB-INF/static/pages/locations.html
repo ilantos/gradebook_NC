@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Gradebook</title>
-
+    <title>Locations</title>
     <!--JQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!--bootstrap-->
@@ -15,9 +14,26 @@
     <div id="header-container"><!--Template for header--></div>
     <div class="container">
         <div id="content-container">
-
+            <div class="container">
+                <button class="btn btn-primary"><a class="link-light" href="/addLocation">Add</a></button>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Delete</th>
+                    <th scope="col">Edit</th>
+                </tr>
+                </thead>
+                <tbody id="locations-table">
+                    <!-- Template for locations -->
+                </tbody>
+            </table>
         </div>
     </div>
     <script src="/resources/header.js"></script>
+    <script src="/resources/locations.js"></script>
 </body>
 </html>
