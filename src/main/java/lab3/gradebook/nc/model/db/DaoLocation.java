@@ -58,7 +58,7 @@ public class DaoLocation {
                 location = new Location(id, parentId, title, locType);
             }
         } catch (SQLException e) {
-            throw new DAOException("Cannot get all locations", e);
+            throw new DAOException("Cannot get location by id " + idLocation, e);
         }
         return location;
     }
@@ -88,7 +88,7 @@ public class DaoLocation {
             }
 
         } catch (SQLException e) {
-            throw new DAOException("Cannot get all locations", e);
+            throw new DAOException("Cannot get all parent locations", e);
         }
         return locationList;
     }
@@ -104,7 +104,7 @@ public class DaoLocation {
             statement.setInt(2, location.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot get all locations", e);
+            throw new DAOException("Cannot update a location", e);
         }
     }
 
@@ -115,7 +115,7 @@ public class DaoLocation {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot get all locations", e);
+            throw new DAOException("Cannot delete a location", e);
         }
     }
 
@@ -131,7 +131,7 @@ public class DaoLocation {
             statement.setString(3, location.getTitle());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot get all locations", e);
+            throw new DAOException("Cannot add a location", e);
         }
     }
 }

@@ -6,12 +6,13 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Person {
     private int id;
-    private String login;
+    private int idLocation;
     private String firstName;
     private String lastName;
+    private String login;
     private String password;
     private boolean isAdmin;
-    private Location location;
 }
