@@ -67,8 +67,8 @@ public class DaoSubject {
         try {
             String query =
                     "UPDATE subject" +
-                            "   SET title=?" +
-                            "   SET description=?" +
+                            "   SET title=?," +
+                            "   description=?" +
                             " WHERE id_subject=?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, subject.getTitle());
@@ -85,6 +85,20 @@ public class DaoSubject {
             String query = "DELETE FROM subject" + " WHERE id_subject=?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Cannot get all subjects", e);
+        }
+    }
+    public void add(Subject subject) throws DAOException {
+        try {
+            String query =
+                    "INSERT INTO subject(" +
+                            "title, description)" +
+                            "VALUES (?, ?);";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setObject(1, subject.getTitle());
+            statement.setString(2, subject.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Cannot get all subjects", e);

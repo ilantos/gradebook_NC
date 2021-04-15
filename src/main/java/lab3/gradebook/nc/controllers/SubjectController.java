@@ -8,13 +8,19 @@ import lab3.gradebook.nc.model.entities.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
 //TODO(left)
-//Реализовать валидный edit/add для subjects&lessons
-//Реализовать delete для lessons
+//Реализовать валидный edit/add/delete для lessons
 @Controller
 @RequestMapping("/subjects")
 public class SubjectController {
@@ -67,6 +73,17 @@ public class SubjectController {
                     customFormatResponseBody.buildResponse(
                             false,
                             "Subject edited unsuccessfully"));
+        }
+    }
+
+    @PostMapping
+    @ResponseBody
+    public String add(@RequestBody Subject subject) throws JsonProcessingException {
+        try {
+            daoSubject.add(subject);
+            return customFormatResponseBody.buildResponse(true, "Subject added successfully");
+        } catch (DAOException e) {
+            return customFormatResponseBody.buildResponse(false, "Subject added unsuccessfully");
         }
     }
 }

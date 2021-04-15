@@ -87,6 +87,47 @@ function editSubject (id) {
         ]
     });
 }
+function addSubject() {
+    $('#content-container').load('/resources/form_subject.html');
+    $.ajax({
+        url:"/subjects",
+        type:"get",
+        complete:[
+            function (response) {
+                let answer = $.parseJSON(response.responseText);
+                console.log(answer);
+                if (answer.response == true) {
+                    $('#form-headline').text('Add subject');
+                    $('#form-button-submit').text('Add');
+                    $('#form-button-submit').attr('onclick', 'requestToAdd()');
+                }
+            }
+        ]
+    });
+}
+
+function requestToAdd() {
+    let id = 0;
+    let title = $('#form-title').val();
+    let description = $('#form-description').val();
+    let lessons = null;
+    let data = {id:id, title:title, description:description, lessons:lessons};
+
+    $.ajax({
+        url:"/subjects",
+        type:"post",
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        complete: [
+            function (response) {
+                console.log(response.responseText.message);
+                //alert(response.responseText);
+                pageSubjects();
+            }
+        ]
+    });
+}
+
 function requestToEditSubject() {
     let id = $('#form-subject').attr('id-subject');
     let title = $('#form-title').val();
@@ -102,10 +143,10 @@ function requestToEditSubject() {
         complete: [
             function (response) {
                 console.log(response);
-                pageSubjects();
             }
         ]
     });
+    pageSubjects();
 }
 
 function removeSubject (id) {
@@ -118,11 +159,10 @@ function removeSubject (id) {
                 console.log(answer);
                 if (answer.response == true) {
                     alert(answer.message);
-                    $('#content-container').load('/resources/subjects.html');
-                    getAllLocations();
                 } else {
                     alert("Some problems at server");
                 }
+                pageSubjects();
             }
         ]
     });
