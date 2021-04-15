@@ -162,7 +162,7 @@ function editLocation (id) {
                 $('#form-headline').text('Edit location');
                 $('#form-title').val(location.title);
                 $('#form-button-submit').text('Edit');
-                $('#form-button-submit').attr('onclick', 'requestToEdit()');
+                $('#form-button-submit').attr('onclick', 'requestToEditLocation()');
                 const option = $('select option[value="' + location.locType + '"]');
                 option.attr('selected', 'selected');
             }
@@ -170,7 +170,7 @@ function editLocation (id) {
     });
 }
 
-function requestToEdit() {
+function requestToEditLocation() {
     let id = $('#form-location').attr('id-location');
     let parent = $('#form-location').attr('id-parent');
     let title = $('#form-title').val();

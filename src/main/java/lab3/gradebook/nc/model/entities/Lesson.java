@@ -13,7 +13,6 @@ public class Lesson {
     private int id;
     private String title;
     private String description;
-    private Subject subject;
     private float maxGrade;
     private LocalDateTime creationDate;
 }

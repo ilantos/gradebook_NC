@@ -1,15 +1,18 @@
 package lab3.gradebook.nc.model.db;
 
-import lab3.gradebook.nc.model.db.DAOException;
 import lab3.gradebook.nc.model.entities.LocType;
 import lab3.gradebook.nc.model.entities.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @Service
 public class DaoLocation {
