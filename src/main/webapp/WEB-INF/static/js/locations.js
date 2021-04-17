@@ -25,13 +25,13 @@ function renderLocations(locations) {
     $.each(locations, function(key, value) {
         $('#locations-table').append('<tr id="location-' + value.id + '">' +
             '            <th scope="row">'+ (key + 1) +'</th>' +
-            '            <td><a class="link-secondary" onclick="locationPage('+ value.id +')">' + value.title + '</a></td>' +
-            '            <td>' + value.locType + '</td>' +
+            '            <td><a class="link-secondary" onclick="location.href=\'/location/' + value.id + '\'">' + value.title + '</a></td>' +
+            '            <td>' + value.locationType + '</td>' +
             '            <td>' +
             '                <button type="button" class="btn btn-danger" onclick="removeLocation(' + value.id + ')">Delete</button>' +
             '            </td>' +
             '            <td>' +
-            '                <button type="button" class="btn btn-info" onclick="editLocation(' + value.id + ')">Edit</button>' +
+            '                <button type="button" class="btn btn-info" onclick="location.href=\'/location/edit/' + value.id + '\'">Edit</button>' +
             '            </td>' +
             '        </tr>');
     });

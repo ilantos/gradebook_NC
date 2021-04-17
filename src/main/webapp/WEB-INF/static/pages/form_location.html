@@ -14,10 +14,10 @@
     <div id="header-container"><!--Template for header--></div>
     <div class="container">
         <div id="content-container">
-            <form id="form-location" class="needs-validation" novalidate="">
+            <form id="form-location" action="/locations">
                 <div class="row g-3">
                     <div class="col-12">
-                        <h3>Add location</h3>
+                        <h3 id="form-headline"></h3>
                     </div>
                     <div class="col-4">
                         <label for="form-title" class="form-label">Title</label>
@@ -34,9 +34,6 @@
                         <label for="loc-type" class="form-label">Type of location</label>
                         <select class="form-select" id="loc-type" required="">
                             <option value="COUNTRY">COUNTRY</option>
-                            <option value="CITY">CITY</option>
-                            <option value="UNIVERSITY">UNIVERSITY</option>
-                            <option value="GROUP">GROUP</option>
                         </select>
                         <div class="invalid-feedback">
                             Please provide a valid location type.
@@ -55,8 +52,9 @@
             </form>
         </div>
     </div>
+    <script src="/resources/cookie.js"></script>
     <script src="/resources/header.js"></script>
-    <script src="/resources/addLocation.js"></script>
+    <script src="/resources/location.form.js"></script>
 
 </body>
 </html>
