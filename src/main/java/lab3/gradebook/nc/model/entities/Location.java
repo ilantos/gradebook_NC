@@ -13,5 +13,5 @@ public class Location {
     private int id;
     private int parentLoc;
     private String title;
-    private LocType locType;
+    private LocationType locationType;
 }

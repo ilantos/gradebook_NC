@@ -2,29 +2,29 @@ package lab3.gradebook.nc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
+import lab3.gradebook.nc.model.CheckSubtypes;
 import lab3.gradebook.nc.model.db.DAOException;
 import lab3.gradebook.nc.model.db.DaoLocation;
 import lab3.gradebook.nc.model.entities.Location;
+import lab3.gradebook.nc.model.entities.LocationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//TODO не выбрасывать DAOException ибо это в 500 ошибку превращается
-// Сделать нормальный response. {"request":True, "message":{...}}
-// + Сделать добавление места
-// * Сделать более умное изменение. Чтобы можно было изменять id_parent, loc type
 @Controller
-@RequestMapping("/locations")
+@RequestMapping("/api/locations")
 public class LocationController {
     private DaoLocation daoLocation;
     private CustomFormatResponseBody customFormatResponseBody;
+    private CheckSubtypes checkSubtypes;
 
     @Autowired
-    public LocationController(DaoLocation daoLocation, CustomFormatResponseBody customFormatResponseBody) {
+    public LocationController(DaoLocation daoLocation, CustomFormatResponseBody customFormatResponseBody, CheckSubtypes checkSubtypes) {
         this.daoLocation = daoLocation;
         this.customFormatResponseBody = customFormatResponseBody;
+        this.checkSubtypes = checkSubtypes;
     }
 
     @GetMapping
@@ -32,6 +32,17 @@ public class LocationController {
     public String allLocations() throws DAOException, JsonProcessingException {
         List<Location> locationList = daoLocation.getAll();
         return customFormatResponseBody.buildResponse(true, locationList);
+    }
+
+    @GetMapping("withoutType/{type}")
+    @ResponseBody
+    public String allLocationsWithoutLocType(@PathVariable String type) throws DAOException, JsonProcessingException {
+        try {
+            List<Location> locationList = daoLocation.getAllWithoutType(LocationType.valueOf(type));
+            return customFormatResponseBody.buildResponse(true, locationList);
+        } catch (IllegalArgumentException e) {
+            return customFormatResponseBody.buildResponse(false, "Incorrect location type");
+        }
     }
 
     @GetMapping("{id}")
@@ -54,6 +65,21 @@ public class LocationController {
                 customFormatResponseBody.buildResponse(
                         false,
                         "Cannot find chain locations by id");
+    }
+
+    @GetMapping("lowerType/{locType}")
+    @ResponseBody
+    public String subtypes(@PathVariable String locType) throws JsonProcessingException {
+        if (locType.trim().equals("-")) {
+            return customFormatResponseBody.buildResponse(true, "COUNTRY");
+        }
+        try {
+            LocationType locationType = checkSubtypes.lowerType(LocationType.valueOf(locType));
+            if (locationType == null) throw new IllegalArgumentException();
+            return customFormatResponseBody.buildResponse(true, locationType);
+        } catch (IllegalArgumentException e) {
+            return customFormatResponseBody.buildResponse(false, "Not exist a subtype");
+        }
     }
 
     @DeleteMapping("{id}")
@@ -90,6 +116,7 @@ public class LocationController {
             daoLocation.add(location);
             return customFormatResponseBody.buildResponse(true, "Location added successfully");
         } catch (DAOException e) {
+            System.out.println(e.getMessage());
             return customFormatResponseBody.buildResponse(false, "Location added unsuccessfully");
         }
     }
