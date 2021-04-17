@@ -1,0 +1,2 @@
+TRUNCATE location CASCADE;
+TRUNCATE subject CASCADE;

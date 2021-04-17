@@ -9,14 +9,14 @@ INSERT INTO location (id_parent, type_loc, title) VALUES (2, 'UNIVERSITY', 'Sumy
 INSERT INTO location (id_parent, type_loc, title) VALUES (3, 'GROUP', 'IN-007');
 INSERT INTO location (id_parent, type_loc, title) VALUES (3, 'GROUP', 'IK-001');
 
-INSERT INTO person (id_location, first_name, last_name, login, password, is_admin)
-	VALUES (null, 'Admin', 'Admin', 'admin1', 'password', true);
-INSERT INTO person (id_location, first_name, last_name, login, password)
-	VALUES (4, 'Petro', 'Petro', 'petro', 'password');
-INSERT INTO person (id_location, first_name, last_name, login, password)
-	VALUES (4, 'Vasya', 'Vasya', 'vasya', 'password');
-INSERT INTO person (id_location, first_name, last_name, login, password)
-	VALUES (5, 'Kate', 'Kate', 'kate', 'password');
+INSERT INTO person (id_location, first_name, last_name, patronymic, login, password, email, is_admin)
+	VALUES (null, 'Admin', 'Admin', 'Adminovich', 'admin', '$2y$12$d0g1IqSX3FnqWaP/mio1ZejgIaNNC4qlDz/1bef1BWeEIlVqwprbm', 'anton.ilchenko98@gmail.com', true);
+INSERT INTO person (id_location, first_name, last_name, patronymic, login, password, email)
+	VALUES (4, 'Petro', 'Petro', 'Petrovich', 'petro', '$2y$12$XVvjYCTzSC5YzgMb7Xt8suZ89//53geTY13CIWjC83Zpr2MAd8J9S', 'petya@gmail.com');
+INSERT INTO person (id_location, first_name, last_name, patronymic, login, password, email)
+	VALUES (4, 'Vasya', 'Vasya', 'Vasilevich', 'vasya', '$2y$12$XVvjYCTzSC5YzgMb7Xt8suZ89//53geTY13CIWjC83Zpr2MAd8J9S', 'vasya@gmail.com');
+INSERT INTO person (id_location, first_name, last_name, patronymic, login, password, email)
+	VALUES (5, 'Kate', 'Kate', 'Katevich', 'kate', '$2y$12$XVvjYCTzSC5YzgMb7Xt8suZ89//53geTY13CIWjC83Zpr2MAd8J9S', 'kate@gmail.com');
 
 INSERT INTO subject (title, description) VALUES ('Rocket science', 'The hardest subject in the world');
 INSERT INTO lesson (id_subject, title, description, max_grade) VALUES (1, 'Matrix', 'Triangle method', 5.0);

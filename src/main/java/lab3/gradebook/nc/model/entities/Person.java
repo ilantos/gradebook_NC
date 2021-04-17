@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -15,7 +16,9 @@ public class Person {
     private int idLocation;
     private String firstName;
     private String lastName;
+    private String patronymic;
     private String login;
     private String password;
+    private String email;
     private boolean isAdmin;
 }

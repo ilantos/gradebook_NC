@@ -33,7 +33,9 @@ public class DaoPerson {
                             resultSet.getString(4),
                             resultSet.getString(5),
                             resultSet.getString(6),
-                            resultSet.getBoolean(7)
+                            resultSet.getString(7),
+                            resultSet.getString(8),
+                            resultSet.getBoolean(9)
                         )
                 );
             }
@@ -60,7 +62,9 @@ public class DaoPerson {
                         resultSet.getString(4),
                         resultSet.getString(5),
                         resultSet.getString(6),
-                        resultSet.getBoolean(7)
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getBoolean(9)
                 );
             }
         } catch (SQLException e) {
@@ -72,16 +76,18 @@ public class DaoPerson {
     public void edit(Person person) throws DAOException {
         try {
             String query = "UPDATE person" +
-                            "  SET id_location=?, first_name=?, last_name=?, login=?, password=?, is_admin=?" +
+                            "  SET id_location=?, first_name=?, last_name=?, patronymic=?, login=?, password=?, email=?, is_admin=?" +
                             "WHERE id_person=?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, person.getIdLocation());
             statement.setString(2, person.getFirstName());
             statement.setString(3, person.getLastName());
-            statement.setString(4, person.getLogin());
-            statement.setString(5, person.getPassword());
-            statement.setBoolean(6, person.isAdmin());
-            statement.setInt(7, person.getId());
+            statement.setString(4, person.getPatronymic());
+            statement.setString(5, person.getLogin());
+            statement.setString(6, person.getPassword());
+            statement.setString(7, person.getLogin());
+            statement.setBoolean(8, person.isAdmin());
+            statement.setInt(9, person.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e.getMessage(), e);
@@ -102,15 +108,17 @@ public class DaoPerson {
     public void add(Person person) throws DAOException {
         try {
             String query =
-                    "INSERT INTO person (id_location, first_name, last_name, login, password, is_admin)" +
-                            "VALUES (?, ?, ?, ?, ?, ?);";
+                    "INSERT INTO person (id_location, first_name, last_name, patronymic, login, password, email, is_admin)" +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, person.getIdLocation());
             statement.setString(2, person.getFirstName());
             statement.setString(3, person.getLastName());
-            statement.setString(4, person.getLogin());
-            statement.setString(5, person.getPassword());
-            statement.setBoolean(6, person.isAdmin());
+            statement.setString(4, person.getPatronymic());
+            statement.setString(5, person.getLogin());
+            statement.setString(6, person.getPassword());
+            statement.setString(7, person.getLogin());
+            statement.setBoolean(8, person.isAdmin());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e.getMessage(), e);
