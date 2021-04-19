@@ -62,6 +62,26 @@ public class DaoSubject {
         }
         return subject;
     }
+    public Subject getByLessonId(int idLesson) throws DAOException {
+        Subject subject = null;
+        try {
+            String query =
+                    "SELECT s.*" +
+                    "FROM lesson l, subject s"
+                    + " WHERE l.id_lesson=? AND s.id_subject = l.id_subject;";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, idLesson);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            int id = resultSet.getInt(1);
+            String title = resultSet.getString(2);
+            String description = resultSet.getString(3);
+            subject = new Subject(id, title, description, daoLesson.getLessonsBySubjectId(id));
+        } catch (SQLException e) {
+            throw new DAOException("Cannot get subject with idLesson = " + idLesson, e);
+        }
+        return subject;
+    }
 
     public void edit(Subject subject) throws DAOException {
         try {

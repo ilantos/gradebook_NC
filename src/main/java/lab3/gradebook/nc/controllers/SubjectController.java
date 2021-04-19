@@ -8,16 +8,10 @@ import lab3.gradebook.nc.model.entities.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 //TODO(left)
 //Реализовать валидный edit/add/delete для lessons
@@ -35,14 +29,18 @@ public class SubjectController {
 
     @GetMapping
     @ResponseBody
-    public String getAllSubjects() throws DAOException, JsonProcessingException {
-        List<Subject> subjects = daoSubject.getAll();
-        return customFormatResponseBody.buildResponse(true, subjects);
+    public String getSubjects(@RequestParam(required = false) Integer lessonId) throws DAOException, JsonProcessingException {
+        Objects response;
+        if (lessonId == null) {
+            return customFormatResponseBody.buildResponse(true, daoSubject.getAll());
+        } else {
+            return customFormatResponseBody.buildResponse(true, daoSubject.getByLessonId(lessonId));
+        }
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    public String getSubjects(@PathVariable int id) throws JsonProcessingException, DAOException {
+    public String getSubjectById(@PathVariable int id) throws JsonProcessingException, DAOException {
         Subject subject = daoSubject.getById(id);
         return subject != null ?
                 customFormatResponseBody.buildResponse(true, subject) :

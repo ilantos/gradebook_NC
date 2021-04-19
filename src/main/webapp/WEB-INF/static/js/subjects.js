@@ -37,7 +37,7 @@ function subjectPage(id) {
                 console.log(answer);
                 if (answer.response == true) {
                     let subject = answer.message;
-                    $('#subject-page-title').text(subject.title);
+                    $('#subject-page-title').text(subject.title) ;
                     $('#subject-page-description').text(subject.description);
                     $.each(subject.lessons, function(key, value) {
 
