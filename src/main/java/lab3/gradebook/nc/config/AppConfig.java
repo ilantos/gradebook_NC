@@ -32,7 +32,7 @@ public class AppConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/resources/**")
-                .addResourceLocations("/WEB-INF/static/", "/WEB-INF/static/templates/", "/WEB-INF/static/js/");
+                .addResourceLocations("/WEB-INF/static/", "/WEB-INF/static/templates/", "/WEB-INF/static/js/", "/WEB-INF/static/css/");
     }
 
     @Override
