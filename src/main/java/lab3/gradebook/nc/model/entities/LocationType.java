@@ -1,6 +1,6 @@
 package lab3.gradebook.nc.model.entities;
 
-public enum LocType {
+public enum LocationType {
     COUNTRY,
     CITY,
     UNIVERSITY,

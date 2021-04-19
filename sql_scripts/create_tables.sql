@@ -14,8 +14,10 @@ CREATE TABLE person (
 	id_location INTEGER REFERENCES location ON DELETE CASCADE,
 	first_name VARCHAR (20),
 	last_name VARCHAR (50),
+    patronymic VARCHAR (50),
 	login VARCHAR (40) UNIQUE NOT NULL,
-	password VARCHAR (30),
+	password VARCHAR (100),
+	email VARCHAR (100) UNIQUE NOT NULL,
 	is_admin BOOLEAN DEFAULT false
 );
 
