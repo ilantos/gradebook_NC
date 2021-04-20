@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/lessons")
+@RequestMapping("api/lessons")
 public class LessonController {
     private DaoLesson daoLesson;
     private CustomFormatResponseBody customFormatResponseBody;

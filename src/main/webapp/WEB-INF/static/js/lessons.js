@@ -1,8 +1,7 @@
 function lessonPage(id) {
     console.log(id);
-    $('#content-container').load('/resources/lesson_page.html');
     $.ajax({
-        url:"/lessons/" + id,
+        url:"/api/lessons/" + id,
         type:"get",
         complete: [
             function (response) {
@@ -25,20 +24,20 @@ function lessonPage(id) {
 }
 function subjectPageByLessonId(id) {
     $.ajax({
-        url:"/subjects?lessonId=" + id,
+        url:"/api/subjects?lessonId=" + id,
         type:"get",
         complete: [
             function (response) {
                 let answer = $.parseJSON(response.responseText);
                 console.log(answer);
-                subjectPage(answer.message.id);
+                window.location.href = "/subjects/" + answer.message.id;
             }
         ]
     });
 }
 function editLesson(id) {
     $.ajax({
-        url:"/lessons/" + id,
+        url:"/api/lessons/" + id,
         type:"get",
         complete: [
             function (response) {
@@ -75,7 +74,7 @@ function requestToEditLesson() {
     let data = {id:id, title:title, description:description, maxGrade:maxGrade, creationDate:creationDate};
     console.log(data);
     $.ajax({
-        url:"/lessons",
+        url:"/api/lessons",
         type:"put",
         contentType: 'application/json',
         data: JSON.stringify(data),
@@ -87,24 +86,7 @@ function requestToEditLesson() {
     });
     subjectPageByLessonId(id);
 }
-function removeLesson(id) {
-    $.ajax({
-        url:"/lessons/" + id,
-        type:"delete",
-        complete: [
-            function (response) {
-                let answer = $.parseJSON(response.responseText);
-                console.log(answer);
-                if (answer.response == true) {
-                    alert(answer.message);
-                } else {
-                    alert("Some problems at server");
-                }
-                pageSubjects();
-            }
-        ]
-    });
-}
+
 function addLesson() {
     $('#content-container').load('/resources/form_lesson.html');
     $('#form-headline').text('Add subject');
@@ -120,7 +102,7 @@ function requestToAdd() {
     let data = {id:id, title:title, description:description, lessons:lessons};
 
     $.ajax({
-        url:"/subjects",
+        url:"/api/subjects",
         type:"post",
         contentType: 'application/json',
         data: JSON.stringify(data),
