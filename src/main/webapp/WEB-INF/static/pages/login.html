@@ -19,18 +19,17 @@
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingInput" placeholder="Login" name="username" value="">
-                <label for="floatingInput">Login</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
+                <label for="username">Login</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
-                <label for="floatingPassword">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
+                <label for="password">Password</label>
             </div>
-            <button class="w-100 btn btn-lg btn-primary-outline" onclick="location.href='/sign-up'">Sign up</button>
             <button class="w-100 btn btn-lg btn-primary" type="submit" value="submit" name="submit">Sign in</button>
-            <p class="mt-5 mb-3 text-muted">© 2021</p>
         </form>
+        <button class="w-100 btn btn-lg btn-primary-outline" onclick="location.href='/sign-up'">Sign up</button>
+        <p class="mt-5 mb-3 text-muted">© 2021</p>
     </main>
-    <script src="/resources/header.js"></script>
 </body>
 </html>
