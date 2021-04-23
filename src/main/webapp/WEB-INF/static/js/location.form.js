@@ -30,12 +30,9 @@ function editLocation (id) {
                     console.log(location);
 
                     $('#form-title').val(location.title);
-                    $('#loc-parent option:selected', this).removeProp("selected");
-                    $('#loc-parent option[value="' + location.parentLoc + '"]').attr("selected", "selected");
-                    $('#loc-parent option[value="' + location.id + '"]').remove();
+                    $('#form-parent-location-container').remove();
+                    $('#loc-type').remove();
 
-                    $('#loc-type').empty();
-                    $('#loc-type').append('<option value="' + location.locationType + '">' + location.locationType + '</option>');
                 } else {
                     alert("Some problems at server: " + answer.message);
                 }

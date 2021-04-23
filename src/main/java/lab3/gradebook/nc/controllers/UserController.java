@@ -1,24 +1,34 @@
 package lab3.gradebook.nc.controllers;
 
-import lab3.gradebook.nc.model.services.IUserService;
-import lab3.gradebook.nc.model.services.RegistrationRequest;
-import lab3.gradebook.nc.model.services.SecurityService;
-import lab3.gradebook.nc.model.services.UserAlreadyExistException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
+import lab3.gradebook.nc.model.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class UserController {
     private IUserService userService;
     private SecurityService securityService;
+    private CustomFormatResponseBody customFormatResponseBody;
+    private ValidatorRegistrationRequest validator;
 
     @Autowired
-    public UserController(IUserService userService, SecurityService securityService) {
+    public UserController(IUserService userService,
+                          SecurityService securityService,
+                          CustomFormatResponseBody customFormatResponseBody,
+                          ValidatorRegistrationRequest validator) {
         this.userService = userService;
         this.securityService = securityService;
+        this.customFormatResponseBody = customFormatResponseBody;
+        this.validator = validator;
     }
 
     @GetMapping("/login")
@@ -32,13 +42,32 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String registration(@RequestBody RegistrationRequest request) {
+    @ResponseBody
+    public ResponseEntity<?> registration(@RequestBody RegistrationRequest request,
+                                          BindingResult bindingResult)
+            throws JsonProcessingException {
         try {
+            validator.validate(request, bindingResult);
+            if (bindingResult.hasErrors()) {
+                FieldError fieldError = bindingResult.getFieldErrors().get(0);
+                throw new IllegalArgumentException(
+                                        fieldError.getField() + " "
+                                                + fieldError.getCode());
+            }
+
             userService.registerNewUserAccount(request);
-            securityService.autoLogin(request.getLogin(), request.getPassword());
-            return "redirect:/";
-        } catch (UserAlreadyExistException e) {
-            return "redirect:sign-up";
+            securityService.autoLogin(
+                    request.getLogin(),
+                    request.getPassword());
+            return ResponseEntity.ok(
+                    customFormatResponseBody.buildResponse(
+                            true,
+                            "User registered successfully"));
+        } catch (UserAlreadyExistException | IllegalArgumentException e) {
+            return ResponseEntity.ok(
+                    customFormatResponseBody.buildResponse(
+                            false,
+                            e.getMessage()));
         }
     }
 }

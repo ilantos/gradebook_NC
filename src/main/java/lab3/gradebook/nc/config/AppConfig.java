@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "lab3.gradebook.nc.model"
 })
 @EnableWebMvc
-@PropertySource(value = {"classpath:application.properties"})
+@PropertySource(value = {"classpath:application.properties", "classpath:validation.properties"})
 public class AppConfig implements WebMvcConfigurer {
     @Bean
     public ViewResolver htmlResolver() {
