@@ -37,9 +37,9 @@ public class LessonController {
     public String delete(@PathVariable int id) throws JsonProcessingException {
         try {
             daoLesson.delete(id);
-            return customFormatResponseBody.buildResponse(true, "Subject deleted successfully");
+            return customFormatResponseBody.buildResponse(true, "Lesson deleted successfully");
         } catch (DAOException e) {
-            return customFormatResponseBody.buildResponse(false, "Subject deleted unsuccessfully");
+            return customFormatResponseBody.buildResponse(false, "Lesson deleted unsuccessfully");
         }
     }
     @PutMapping
