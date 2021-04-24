@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
         "lab3.gradebook.nc.model"
 })
 @EnableWebMvc
-@PropertySource(value = {"classpath:application.properties"})
+@PropertySource(value = {"classpath:application.properties", "classpath:validation.properties"})
 public class AppConfig implements WebMvcConfigurer {
     @Bean
     public ViewResolver htmlResolver() {
@@ -32,7 +32,7 @@ public class AppConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/resources/**")
-                .addResourceLocations("/WEB-INF/static/", "/WEB-INF/static/pages/", "/WEB-INF/static/js/");
+                .addResourceLocations("/WEB-INF/static/", "/WEB-INF/static/templates/", "/WEB-INF/static/js/");
     }
 
     @Override

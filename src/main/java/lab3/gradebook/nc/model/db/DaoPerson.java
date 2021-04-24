@@ -73,6 +73,34 @@ public class DaoPerson {
         return person;
     }
 
+    public Person getByLogin(String login) throws DAOException {
+        Person person = null;
+        try {
+            String query = "SELECT * FROM person" +
+                    " WHERE login = ?;";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, login);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                person = new Person(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getBoolean(9)
+                );
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+        return person;
+    }
+
     public void edit(Person person) throws DAOException {
         try {
             String query = "UPDATE person" +

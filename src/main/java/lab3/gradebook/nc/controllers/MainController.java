@@ -1,5 +1,8 @@
 package lab3.gradebook.nc.controllers;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class MainController {
     @GetMapping("/")
-    public String main() {
+    public String main(HttpServletResponse response) {
+        response.addCookie(new Cookie("username", getCurrentUser()));
         return "index";
     }
 
@@ -20,7 +24,8 @@ public class MainController {
     }
 
     @GetMapping("/locations/{id}")
-    public String locationPage(@PathVariable int id, HttpServletResponse response) {
+    public String locationPage(@PathVariable int id,
+                               HttpServletResponse response) {
         response.addCookie(new Cookie("idLocation", String.valueOf(id)));
         return "/pages/location";
     }
@@ -32,7 +37,8 @@ public class MainController {
     }
 
     @GetMapping("/locations/edit/{id}")
-    public String editLocationPage(@PathVariable int id, HttpServletResponse response) {
+    public String editLocationPage(@PathVariable int id,
+                                  HttpServletResponse response) {
         response.addCookie(new Cookie("formLocation", "edit"));
         response.addCookie(new Cookie("idLocation", String.valueOf(id)));
         return "/pages/form_location";
@@ -77,5 +83,15 @@ public class MainController {
         response.addCookie(new Cookie("formLesson", "edit"));
         response.addCookie(new Cookie("idLesson", String.valueOf(id)));
         return "/pages/form_lesson";
+    }
+
+    private String getCurrentUser() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            return currentUserName;
+        }
+        return "not authenticated user";
     }
 }

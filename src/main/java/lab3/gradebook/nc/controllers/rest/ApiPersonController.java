@@ -1,4 +1,4 @@
-package lab3.gradebook.nc.controllers;
+package lab3.gradebook.nc.controllers.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
@@ -14,12 +14,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/users")
-public class PersonController {
+public class ApiPersonController {
     private DaoPerson daoPerson;
     private CustomFormatResponseBody customFormatResponseBody;
 
     @Autowired
-    public PersonController(DaoPerson daoPerson, CustomFormatResponseBody customFormatResponseBody) {
+    public ApiPersonController(DaoPerson daoPerson, CustomFormatResponseBody customFormatResponseBody) {
         this.daoPerson = daoPerson;
         this.customFormatResponseBody = customFormatResponseBody;
     }
@@ -40,6 +40,17 @@ public class PersonController {
                 customFormatResponseBody.buildResponse(
                         false,
                         "Cannot find user by id");
+    }
+
+    @GetMapping("/login/{login}")
+    @ResponseBody
+    public String getByLogin(@PathVariable String login) throws JsonProcessingException, DAOException {
+        Person person = daoPerson.getByLogin(login);
+        return person != null ?
+                customFormatResponseBody.buildResponse(true, person) :
+                customFormatResponseBody.buildResponse(
+                        false,
+                        "Cannot find user by login");
     }
 
     @DeleteMapping("{id}")
