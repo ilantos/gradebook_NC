@@ -3,6 +3,7 @@ $(document).ready(function () {
 });
 
 function configureTemplateByCookie () {
+    console.log("1");
     if (getCookie("formSubject") === "edit") {
         $('#form-button-submit').text('Edit');
         $('#form-button-submit').attr('onclick', 'requestToEdit()');

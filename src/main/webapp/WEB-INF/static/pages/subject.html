@@ -14,7 +14,7 @@
 <div id="header-container"><!--Template for header--></div>
 <div class="container">
     <div id="content-container">
-        <button class="btn btn-primary" onclick="addLesson()">Add Lesson</button>
+        <button class="btn btn-primary" onclick="{window.location.href = '/lessons/add?subjectId=' + getCookie('idSubject')}">Add Lesson</button>
         <div class="col-6">
             <h3>Subject</h3>
             <h5>Title</h5>

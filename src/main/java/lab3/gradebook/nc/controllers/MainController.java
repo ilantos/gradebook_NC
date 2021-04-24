@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -73,7 +74,8 @@ public class MainController {
     }
 
     @GetMapping("/lessons/add")
-    public String addLessonPage(HttpServletResponse response) {
+    public String addLessonPage(HttpServletResponse response, @RequestParam String subjectId) {
+        response.addCookie(new Cookie("idSubject", subjectId));
         response.addCookie(new Cookie("formLesson", "add"));
         return "/pages/form_lesson";
     }
