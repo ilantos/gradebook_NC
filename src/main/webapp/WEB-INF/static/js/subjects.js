@@ -1,35 +1,62 @@
+$(document).ready(function () {
+    getAllSubjects();
+});
+
 function getAllSubjects() {
     $.ajax({
-        url:"/subjects",
+        url:"/api/subjects",
         type:"get",
         complete:[
             function (response) {
                 let answer = $.parseJSON(response.responseText);
                 if (answer.response == true) {
-                    $.each(answer.message, function(key, value) {
-                        $('#subjects-table').append('<tr id="subject-' + value.id + '">' +
-                            '            <th scope="row">'+ (key + 1) +'</th>' +
-                            '            <td><a class="link-secondary" onclick="subjectPage('+ value.id +')">' + value.title + '</a></td>' +
-                            '            <td>' + value.description + '</td>' +
-                            '            <td>' +
-                            '                <button type="button" class="btn btn-danger" onclick="removeSubject(' + value.id + ')">Delete</button>' +
-                            '            </td>' +
-                            '            <td>' +
-                            '                <button type="button" class="btn btn-info" onclick="editSubject(' + value.id + ')">Edit</button>' +
-                            '            </td>' +
-                            '        </tr>');
-                    });
+                    renderSubject(answer.message);
+                }
+            }
+        ]
+    });
+}
+function renderSubject(subjects) {
+    $.each(subjects, function(key, value) {
+        $('#subjects-table').append('<tr id="subject-' + value.id + '">' +
+            '            <th scope="row">'+ (key + 1) +'</th>' +
+            '            <td><a class="link-secondary" onclick="location.href = \'/subjects/'+ value.id +'\';">' + value.title + '</a></td>' +
+            '            <td>' + value.description + '</td>' +
+            '            <td>' +
+            '                <button type="button" class="btn btn-danger" onclick="removeSubject(' + value.id + ')">Delete</button>' +
+            '            </td>' +
+            '            <td>' +
+            '                <button type="button" class="btn btn-info" onclick="location.href=\'/subjects/edit/' + value.id + '\'">Edit</button>' +
+            '            </td>' +
+            '        </tr>');
+    });
+}
+function removeSubject (id) {
+    $.ajax({
+        url:"/api/subjects/" + id,
+        type:"delete",
+        complete: [
+            function (response) {
+                let answer = $.parseJSON(response.responseText);
+                console.log("Request: delete subject " + id);
+                console.log(answer);
+                alert(answer.message);
+                if (answer.response == true) {
+                    $('#subjects-table').empty();
+                    getAllSubjects();
                 }
             }
         ]
     });
 }
 
+
+
+
 function subjectPage(id) {
     console.log(id);
-    $('#content-container').load('/resources/subject_page.html');
     $.ajax({
-        url:"/subjects/" + id,
+        url:"/api/subjects/" + id,
         type:"get",
         complete: [
             function (response) {
@@ -40,12 +67,12 @@ function subjectPage(id) {
                     $('#subject-page-title').text(subject.title) ;
                     $('#subject-page-description').text(subject.description);
                     $.each(subject.lessons, function(key, value) {
-
                         $('#lessons-table').append('<tr id="lesson-' + value.id + '">' +
                             '            <th scope="row">'+ (key + 1) +'</th>' +
-                            '            <td><a class="link-secondary" onclick="lessonPage('+ value.id +')">' + value.title + '</a></td>' +
-                            '            <td>' + value.description + '</td>' + '<td>' + value.maxGrade + '</td>'+ '<td>' + value.creationDate.year + '.'
-                            +  value.creationDate.monthValue + '.' + value.creationDate.dayOfMonth + '</td>' +
+                            '            <td><a class="link-secondary" onclick="location.href = \'/lessons/'+ value.id +'\';">' + value.title + '</a></td>' +
+                            '            <td>' + value.description + '</td>' +
+                            '            <td>' + value.maxGrade + '</td>'+
+                            '            <td>' + value.creationDate.year + '.' +  value.creationDate.monthValue + '.' + value.creationDate.dayOfMonth + '</td>' +
                             '            <td>' +
                             '                <button type="button" class="btn btn-danger" onclick="removeLesson(' + value.id + ')">Delete</button>' +
                             '            </td>' +
@@ -66,7 +93,7 @@ function subjectPage(id) {
 function editSubject (id) {
     $('#content-container').load('/resources/form_subject.html');
     $.ajax({
-        url:"/subjects/" + id,
+        url:"/api/subjects/" + id,
         type:"get",
         complete: [
             function (response) {
@@ -88,9 +115,9 @@ function editSubject (id) {
     });
 }
 function addSubject() {
-    $('#content-container').load('/resources/form_subject.html');
+    window.location.href = "";
     $.ajax({
-        url:"/subjects",
+        url:"/api/subjects",
         type:"get",
         complete:[
             function (response) {
@@ -114,7 +141,7 @@ function requestToAdd() {
     let data = {id:id, title:title, description:description, lessons:lessons};
 
     $.ajax({
-        url:"/subjects",
+        url:"/api/subjects",
         type:"post",
         contentType: 'application/json',
         data: JSON.stringify(data),
@@ -136,7 +163,7 @@ function requestToEditSubject() {
     let data = {id:id, title:title, description:description, lessons: lessons};
     console.log(data);
     $.ajax({
-        url:"/subjects",
+        url:"/api/subjects",
         type:"put",
         contentType: 'application/json',
         data: JSON.stringify(data),
@@ -147,27 +174,4 @@ function requestToEditSubject() {
         ]
     });
     pageSubjects();
-}
-
-function removeSubject (id) {
-    $.ajax({
-        url:"/subjects/" + id,
-        type:"delete",
-        complete: [
-            function (response) {
-                let answer = $.parseJSON(response.responseText);
-                console.log(answer);
-                if (answer.response == true) {
-                    alert(answer.message);
-                } else {
-                    alert("Some problems at server");
-                }
-                pageSubjects();
-            }
-        ]
-    });
-}
-function pageSubjects() {
-    $('#content-container').load('/resources/subjects.html');
-    getAllSubjects();
 }

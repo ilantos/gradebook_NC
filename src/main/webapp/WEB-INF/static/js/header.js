@@ -4,12 +4,12 @@ $(document).ready(function() {
 
 function header_location_click() {
     $('#link-locations').attr('class', 'nav-link active');
-    $('#content-container').load('/resources/locations.html');
+    window.location.href = "/locations";
     getAllLocations();
 }
 function header_subject_click() {
     $('#link-subjects').attr('class', 'nav-link active');
-    $('#content-container').load('/resources/subjects.html');
+    window.location.href = "/subjects";
     getAllSubjects();
 }
 
