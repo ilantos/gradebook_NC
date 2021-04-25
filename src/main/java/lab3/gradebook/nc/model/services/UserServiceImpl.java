@@ -1,5 +1,6 @@
 package lab3.gradebook.nc.model.services;
 
+import lab3.gradebook.nc.model.RegistrationRequest;
 import lab3.gradebook.nc.model.db.DAOException;
 import lab3.gradebook.nc.model.db.DaoPerson;
 import lab3.gradebook.nc.model.entities.Person;

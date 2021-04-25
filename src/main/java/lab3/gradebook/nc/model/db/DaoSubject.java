@@ -2,6 +2,7 @@ package lab3.gradebook.nc.model.db;
 
 import lab3.gradebook.nc.model.entities.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -42,6 +43,33 @@ public class DaoSubject {
         }
         return subjects;
     }
+
+    public List<Subject> getTeachingByLogin(String login) throws DAOException {
+        List<Subject> subjects = new ArrayList<>();
+        try {
+            String query = "SELECT s.*" +
+                    "  FROM person p" +
+                    "  JOIN person_subject ps ON (ps.id_person = p.id_person)" +
+                    "  JOIN subject s ON (s.id_subject = ps.id_subject)" +
+                    " WHERE p.login = ? AND ps.person_role = 'TEACHER';";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, login);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String title = resultSet.getString(2);
+                String description = resultSet.getString(3);
+                subjects.add(new Subject(id, title, description, null));
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+        return subjects;
+    }
+
     public Subject getById(int idSubject) throws DAOException {
         Subject subject = null;
         try {

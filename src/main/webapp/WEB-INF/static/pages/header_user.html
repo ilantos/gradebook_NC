@@ -1,0 +1,18 @@
+<script src="/resources/cookie.js"></script>
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between px-4 py-3 mb-4 border-bottom">
+    <a id="username" href="/homepage" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+        <script>
+            let currentUser = getCookie("username");
+            console.log("current user is " + currentUser);
+            $('#username').text(currentUser);
+        </script>
+    </a>
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li class="nav-item"><a id="link-locations" href="/study" class="nav-link" >Study</a></li>
+        <li class="nav-item"><a id="link-teaching" href="/teaching" class="nav-link">Teaching</a></li>
+    </ul>
+
+    <div class="col-md-3 text-end">
+        <button type="button" class="btn btn-outline-secondary me-2" onclick="location.href='/logout'">Logout</button>
+    </div>
+</header>

@@ -38,7 +38,7 @@ function parentLocationsChain() {
                     console.log("chain:" + locations)
                     let length = locations.length;
                     $.each(locations, function (key, value) {
-                        $('#location-page-chain').append('<a class="link-secondary" onclick="location.href=\'/location/' + value.id + '\'">' + value.title + '</a>');
+                        $('#location-page-chain').append('<a class="link-secondary" onclick="location.href=\'/locations/' + value.id + '\'">' + value.title + '</a>');
                         if (key + 1 < length) {
                             $('#location-page-chain').append('    ->    ');
                         }

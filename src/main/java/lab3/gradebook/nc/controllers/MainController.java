@@ -18,6 +18,12 @@ public class MainController {
         return "index";
     }
 
+    @GetMapping("/homepage")
+    public String homepage(HttpServletResponse response) {
+        response.addCookie(new Cookie("username", getCurrentUser()));
+        return "homepage";
+    }
+
     @GetMapping("/locations")
     public String locationsPage() {
         return "pages/locations";
@@ -49,7 +55,8 @@ public class MainController {
     }
 
     @GetMapping("/subjects/{id}")
-    public String subjectPage(@PathVariable int id, HttpServletResponse response) {
+    public String subjectPage(@PathVariable int id,
+                              HttpServletResponse response) {
         response.addCookie(new Cookie("idSubject", String.valueOf(id)));
         return "/pages/subject";
     }
@@ -61,13 +68,15 @@ public class MainController {
     }
 
     @GetMapping("/subjects/edit/{id}")
-    public String editSubjectPage(@PathVariable int id, HttpServletResponse response) {
+    public String editSubjectPage(@PathVariable int id,
+                                  HttpServletResponse response) {
         response.addCookie(new Cookie("formSubject", "edit"));
         response.addCookie(new Cookie("idSubject", String.valueOf(id)));
         return "/pages/form_subject";
     }
     @GetMapping("/lessons/{id}")
-    public String lessonPage(@PathVariable int id, HttpServletResponse response) {
+    public String lessonPage(@PathVariable int id,
+                             HttpServletResponse response) {
         response.addCookie(new Cookie("idLesson", String.valueOf(id)));
         return "/pages/lesson";
     }
@@ -79,7 +88,8 @@ public class MainController {
     }
 
     @GetMapping("/lessons/edit/{id}")
-    public String editLessonPage(@PathVariable int id, HttpServletResponse response) {
+    public String editLessonPage(@PathVariable int id,
+                                 HttpServletResponse response) {
         response.addCookie(new Cookie("formLesson", "edit"));
         response.addCookie(new Cookie("idLesson", String.valueOf(id)));
         return "/pages/form_lesson";
@@ -92,6 +102,6 @@ public class MainController {
             String currentUserName = authentication.getName();
             return currentUserName;
         }
-        return "not authenticated user";
+        throw new IllegalStateException("user is not authenticated");
     }
 }

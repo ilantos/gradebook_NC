@@ -1,4 +1,4 @@
-package lab3.gradebook.nc.model;
+package lab3.gradebook.nc.model.services;
 
 import lab3.gradebook.nc.model.entities.LocationType;
 import org.springframework.beans.factory.InitializingBean;

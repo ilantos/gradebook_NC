@@ -2,6 +2,7 @@ package lab3.gradebook.nc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
+import lab3.gradebook.nc.model.RegistrationRequest;
 import lab3.gradebook.nc.model.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,8 +44,9 @@ public class UserController {
 
     @PostMapping("/registration")
     @ResponseBody
-    public ResponseEntity<?> registration(@RequestBody RegistrationRequest request,
-                                          BindingResult bindingResult)
+    public ResponseEntity<?> registration(
+            @RequestBody RegistrationRequest request,
+            BindingResult bindingResult)
             throws JsonProcessingException {
         try {
             validator.validate(request, bindingResult);

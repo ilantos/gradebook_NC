@@ -1,5 +1,6 @@
 package lab3.gradebook.nc.model.services;
 
+import lab3.gradebook.nc.model.RegistrationRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;

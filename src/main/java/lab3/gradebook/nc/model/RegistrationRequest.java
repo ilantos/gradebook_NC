@@ -1,4 +1,4 @@
-package lab3.gradebook.nc.model.services;
+package lab3.gradebook.nc.model;
 
 import lombok.*;
 

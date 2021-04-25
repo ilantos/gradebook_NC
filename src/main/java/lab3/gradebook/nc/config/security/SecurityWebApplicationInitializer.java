@@ -1,4 +1,4 @@
-package lab3.gradebook.nc.config;
+package lab3.gradebook.nc.config.security;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
