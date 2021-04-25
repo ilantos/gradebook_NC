@@ -1,38 +1,35 @@
+const userID = getCookie("idUser");
 $(document).ready(function () {
     configureTemplateByCookie();
 });
 
 function configureTemplateByCookie () {
-    console.log("1");
-    if (getCookie("formSubject") === "edit") {
+    if (getCookie("formUser") === "edit") {
         $('#form-button-submit').text('Edit');
         $('#form-button-submit').attr('onclick', 'requestToEdit()');
-        $('#form-headline').text("Edit subject");
-        console.log("cookie: " + getCookie("idSubject"));
-        id = getCookie("idSubject");
-        editSubject(id);
+        $('#form-headline').text("Edit user");
+        editUser(userID);
     }
-    if (getCookie("formSubject") === "add") {
+    if (getCookie("formUser") === "add") {
         $('#form-button-submit').text('Add');
         $('#form-button-submit').attr('onclick', 'requestToAdd()');
-        $('#form-headline').text("Add subject");
+        $('#form-headline').text("Add user");
     }
 }
-
-function editSubject (id) {
+function editUser (id) {
     $.ajax({
-        url:"/api/subjects/" + id,
+        url:"/api/users/" + id,
         type:"get",
         complete: [
             function (response) {
                 let answer = $.parseJSON(response.responseText);
                 console.log(answer);
                 if (answer.response == true) {
-                    let subject = answer.message;
-                    console.log(subject);
-
-                    $('#form-title').val(subject.title);
-                    $('#form-description').val(subject.description);
+                    let user = answer.message;
+                    console.log(user);
+                    $('#form-first-name').val(user.firstName);
+                    $('#form-last-name').val(user.lastName);
+                    $('#form-patronymic').val(user.patronymic);
                 } else {
                     alert("Some problems at server: " + answer.message);
                 }
@@ -40,17 +37,15 @@ function editSubject (id) {
         ]
     });
 }
-
 function requestToEdit() {
-    let id = getCookie("idSubject");
-    let title = $('#form-title').val();
-    let description = $("#form-description" ).val();
-    let lessons = null;
-    let data = {id:id, title:title, description:description, lessons: lessons};
-    console.log("Request: edit subject");
+    let firstName = $('#form-first-name').val();
+    let lastName = $('#form-last-name').val();
+    let patronymic = $('#form-patronymic').val();
+    let data = {id:userID, firstName: firstName, lastName: lastName, patronymic: patronymic};
+    console.log("Request: edit user");
     console.log(data);
     $.ajax({
-        url:"/api/subjects",
+        url:"/api/users",
         type:"put",
         contentType: 'application/json',
         data: JSON.stringify(data),
@@ -64,17 +59,15 @@ function requestToEdit() {
         ]
     });
 }
-
 function requestToAdd() {
-    let id = 0;
-    let title = $('#form-title').val();
-    let description = $("#form-description" ).val();
-    let lessons = null;
-    let data = {id:id, title:title, description:description, lessons: lessons};
-    console.log("Request: add subject");
+    let firstName = $('#form-first-name').val();
+    let lastName = $('#form-last-name').val();
+    let patronymic = $('#form-patronymic').val();
+    let data = {id:0, firstName: firstName, lastName: lastName, patronymic: patronymic};
+    console.log("Request: add user");
     console.log(data);
     $.ajax({
-        url:"/api/subjects",
+        url:"/api/users",
         type:"post",
         contentType:'application/json',
         data:JSON.stringify(data),
@@ -87,5 +80,4 @@ function requestToAdd() {
             }
         ]
     });
-    window.location.href = "/subjects";
 }

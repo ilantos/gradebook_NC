@@ -1,13 +1,12 @@
-const id = getCookie("idSubject");
+const subjectId = getCookie("idSubject");
 $(document).ready(function () {
-    subjectPage(id);
-    parentLocationsChain();
+    subjectPage(subjectId);
 });
 
 function subjectPage(id) {
     console.log(id);
     $.ajax({
-        url:"/api/subject/" + id,
+        url:"/api/subjects/" + id,
         type:"get",
         async: false,
         complete: [
@@ -58,7 +57,7 @@ function removeLesson(id) {
                 } else {
                     alert("Some problems at server");
                 }
-                window.location.href = "/subjects/" + getCookie("idSubject");
+                window.location.href = "/subjects/" + subjectId;
             }
         ]
     });
