@@ -9,7 +9,6 @@ function configureTemplateByCookie () {
         $('#form-button-submit').attr('onclick', 'requestToEdit()');
         $('#form-headline').text("Edit lesson");
         const id = getCookie("idLesson");
-        editLocation(id);
     }
     if (getCookie("formLesson") === "add") {
         $('#form-button-submit').text('Add');

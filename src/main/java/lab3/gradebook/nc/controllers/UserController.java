@@ -8,13 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
-public class UserController {
+public class
+UserController {
     private IUserService userService;
     private SecurityService securityService;
     private CustomFormatResponseBody customFormatResponseBody;
@@ -39,6 +40,30 @@ public class UserController {
     @GetMapping("/sign-up")
     public String signUp() {
         return "/pages/sign_up";
+    }
+
+    @GetMapping("/users")
+    public String usersPage() {
+        return "/pages/users";
+    }
+
+    @GetMapping("/users/{id}")
+    public String userPage(@PathVariable String id, HttpServletResponse response) {
+        response.addCookie(new Cookie("idUser", String.valueOf(id)));
+        return "/pages/user";
+    }
+
+    @GetMapping("/users/add")
+    public String addSubjectPage(HttpServletResponse response) {
+        response.addCookie(new Cookie("formUser", "add"));
+        return "/pages/form_user";
+    }
+
+    @GetMapping("/users/edit/{id}")
+    public String editSubjectPage(@PathVariable int id, HttpServletResponse response) {
+        response.addCookie(new Cookie("formUser", "edit"));
+        response.addCookie(new Cookie("idUser", String.valueOf(id)));
+        return "/pages/form_user";
     }
 
     @PostMapping("/registration")
