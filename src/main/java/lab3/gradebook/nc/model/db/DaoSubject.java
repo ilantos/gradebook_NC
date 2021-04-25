@@ -70,6 +70,26 @@ public class DaoSubject {
         return subjects;
     }
 
+    public boolean isAvailableForUser(int id, String login) throws DAOException {
+        Subject subject = null;
+        try {
+            String query = "SELECT p.login, ps.id_subject" +
+                    "FROM person p" +
+                    "JOIN person_subject ps ON (ps.id_person = p.id_person)" +
+                    "WHERE p.login = ?" +
+                    "  AND ps.id_subject = ?" +
+                    "  AND ps.person_role = 'TEACHER';";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, login);
+            statement.setInt(2, id);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+            
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+    }
+
     public Subject getById(int idSubject) throws DAOException {
         Subject subject = null;
         try {

@@ -15,12 +15,14 @@ public class MainController {
     @GetMapping("/")
     public String main(HttpServletResponse response) {
         response.addCookie(new Cookie("username", getCurrentUser()));
+        response.addCookie(new Cookie("isAdmin", "true"));
         return "index";
     }
 
     @GetMapping("/homepage")
     public String homepage(HttpServletResponse response) {
         response.addCookie(new Cookie("username", getCurrentUser()));
+        response.addCookie(new Cookie("isAdmin", "false"));
         return "homepage";
     }
 
@@ -49,6 +51,11 @@ public class MainController {
         response.addCookie(new Cookie("idLocation", String.valueOf(id)));
         return "/pages/form_location";
     }
+    @GetMapping("/teaching")
+    public String subjectsPageTeaching() {
+        return "pages/subjects_teaching";
+    }
+
     @GetMapping("/subjects")
     public String subjectsPage() {
         return "pages/subjects";
