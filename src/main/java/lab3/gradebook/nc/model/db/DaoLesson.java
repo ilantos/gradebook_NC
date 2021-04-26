@@ -95,16 +95,17 @@ public class DaoLesson {
             throw new DAOException("Cannot get all subjects", e);
         }
     }
-    public void add(Lesson lesson) throws DAOException {
+    public void add(Lesson lesson, int subjectId) throws DAOException {
         try {
             String query =
                     "INSERT INTO lesson(" +
-                            "title, description, max_grade)" +
-                            "VALUES (?, ?, ?);";
+                            "id_subject, title, description, max_grade)" +
+                            "VALUES (?, ?, ?, ?);";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setObject(1, lesson.getTitle());
-            statement.setString(2, lesson.getDescription());
-            statement.setFloat(2, lesson.getMaxGrade());
+            statement.setInt(1, subjectId);
+            statement.setString(2, lesson.getTitle());
+            statement.setString(3, lesson.getDescription());
+            statement.setFloat(4, lesson.getMaxGrade());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Cannot get all lessons", e);

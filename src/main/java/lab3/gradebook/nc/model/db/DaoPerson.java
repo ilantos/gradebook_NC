@@ -104,18 +104,13 @@ public class DaoPerson {
     public void edit(Person person) throws DAOException {
         try {
             String query = "UPDATE person" +
-                            "  SET id_location=?, first_name=?, last_name=?, patronymic=?, login=?, password=?, email=?, is_admin=?" +
+                            "  SET first_name=?, last_name=?, patronymic=?" +
                             "WHERE id_person=?;";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, person.getIdLocation());
-            statement.setString(2, person.getFirstName());
-            statement.setString(3, person.getLastName());
-            statement.setString(4, person.getPatronymic());
-            statement.setString(5, person.getLogin());
-            statement.setString(6, person.getPassword());
-            statement.setString(7, person.getLogin());
-            statement.setBoolean(8, person.isAdmin());
-            statement.setInt(9, person.getId());
+            statement.setString(1, person.getFirstName());
+            statement.setString(2, person.getLastName());
+            statement.setString(3, person.getPatronymic());
+            statement.setInt(4, person.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException(e.getMessage(), e);

@@ -35,35 +35,6 @@ function subjectPageByLessonId(id) {
         ]
     });
 }
-function editLesson(id) {
-    $.ajax({
-        url:"/api/lessons/" + id,
-        type:"get",
-        complete: [
-            function (response) {
-                $('#content-container').load('/resources/form_lesson.html');
-                $('#form-headline').text('Edit Lesson');
-                $('#lesson-cancel-button').attr("onclick", "subjectPageByLessonId(" + id + ")");
-                $('#form-headline').text('Edit subject');
-                $('#form-button-submit').text('Edit');
-                $('#form-button-submit').attr('onclick', 'requestToEditLesson()');
-                let answer = $.parseJSON(response.responseText);
-                console.log(answer);
-                let lesson;
-                if (answer.response == true) {
-                    lesson = answer.message;
-                } else {
-                    lesson = null;
-                }
-                console.log(lesson);
-                $('#form-lesson').attr('id-lesson', lesson.id);
-                $('#form-title').val(lesson.title);
-                $('#form-description').val(lesson.description);
-                $('#form-max-grade').val(lesson.maxGrade);
-            }
-        ]
-    });
-}
 
 function requestToEditLesson() {
     let id = $('#form-lesson').attr('id-lesson');
@@ -88,29 +59,42 @@ function requestToEditLesson() {
 }
 
 function addLesson() {
-    $('#content-container').load('/resources/form_lesson.html');
-    $('#form-headline').text('Add subject');
-    $('#form-button-submit').text('Add');
-    $('#form-button-submit').attr('onclick', 'requestToAdd()');
+    window.location.href = "";
+    $.ajax({
+        url:"/api/lessons",
+        type:"post",
+        complete:[
+            function (response) {
+                let answer = $.parseJSON(response.responseText);
+                console.log(answer);
+                if (answer.response == true) {
+                    $('#form-headline').text('Add lesson');
+                    $('#form-button-submit').text('Add');
+                    $('#form-button-submit').attr('onclick', 'requestToAdd()');
+                }
+            }
+        ]
+    });
 }
 
 function requestToAdd() {
-    let id = 0;
+    let id = $('#form-lesson').attr('id-lesson');
     let title = $('#form-title').val();
-    let description = $('#form-description').val();
-    let lessons = null;
-    let data = {id:id, title:title, description:description, lessons:lessons};
+    let description = $("#form-description" ).val();
+    let maxGrade =  $('#form-max-grade').val();
+    let creationDate = $('#form-creation-date').val();
+    let data = {id:id, title:title, description:description, maxGrade:maxGrade, creationDate:creationDate};
 
     $.ajax({
-        url:"/api/subjects",
+        url:"/api/lessons",
         type:"post",
         contentType: 'application/json',
         data: JSON.stringify(data),
         complete: [
             function (response) {
                 console.log(response.responseText.message);
-                //alert(response.responseText);
-                pageSubjects();
+                console.log("idSubject: " + getCookie("idSubject"));
+                window.location.href = "/subjects/" + getCookie("idSubject");
             }
         ]
     });
