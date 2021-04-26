@@ -8,6 +8,7 @@ function configureForm() {
         type:"get",
         complete:[
             function (response) {
+                console.log(response);
                 let answer = $.parseJSON(response.responseText);
                 console.log("Request: get all locations");
                 console.log(answer);

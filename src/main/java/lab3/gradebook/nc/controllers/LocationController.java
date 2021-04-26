@@ -9,13 +9,11 @@ import lab3.gradebook.nc.model.entities.Location;
 import lab3.gradebook.nc.model.entities.LocationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Controller
-@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/locations")
 public class LocationController {
     private DaoLocation daoLocation;

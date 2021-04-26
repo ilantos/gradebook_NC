@@ -5,6 +5,7 @@ import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
 import lab3.gradebook.nc.model.db.DAOException;
 import lab3.gradebook.nc.model.db.DaoSubject;
 import lab3.gradebook.nc.model.entities.Subject;
+import lab3.gradebook.nc.utils.AppMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -54,7 +55,14 @@ public class SubjectController {
 
     @GetMapping("{id}")
     @ResponseBody
-    public String getSubjectById(@PathVariable int id) throws JsonProcessingException, DAOException {
+    public String getSubjectById(@PathVariable int id,
+                                 Principal principal)
+            throws JsonProcessingException, DAOException {
+        if (!daoSubject.isAvailableForUser(id, principal.getName())) {
+            return customFormatResponseBody.buildResponse(
+                    false,
+                    AppMessages.ACCESS_FAILED);
+        }
         Subject subject = daoSubject.getById(id);
         return subject != null ?
                 customFormatResponseBody.buildResponse(true, subject) :
@@ -64,7 +72,14 @@ public class SubjectController {
     }
     @DeleteMapping("{id}")
     @ResponseBody
-    public String delete(@PathVariable int id) throws JsonProcessingException {
+    public String delete(@PathVariable int id,
+                         Principal principal)
+            throws JsonProcessingException, DAOException {
+        if (!daoSubject.isAvailableForUser(id, principal.getName())) {
+            return customFormatResponseBody.buildResponse(
+                    false,
+                    AppMessages.ACCESS_FAILED);
+        }
         try {
             daoSubject.delete(id);
             return customFormatResponseBody.buildResponse(true, "Subject deleted successfully");
@@ -73,7 +88,15 @@ public class SubjectController {
         }
     }
     @PutMapping
-    public ResponseEntity<?> edit(@RequestBody Subject subject) throws JsonProcessingException {
+    public ResponseEntity<?> edit(@RequestBody Subject subject,
+                                  Principal principal)
+            throws JsonProcessingException, DAOException {
+        if (!daoSubject.isAvailableForUser(subject.getId(), principal.getName())) {
+            return ResponseEntity.status(400).body(
+                    customFormatResponseBody.buildResponse(
+                            false,
+                            AppMessages.ACCESS_FAILED));
+        }
         try {
             daoSubject.edit(subject);
             return ResponseEntity.ok(
