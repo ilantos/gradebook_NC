@@ -2,11 +2,11 @@ package lab3.gradebook.nc.controllers.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
-import lab3.gradebook.nc.model.CheckSubtypes;
 import lab3.gradebook.nc.model.db.DAOException;
 import lab3.gradebook.nc.model.db.DaoLocation;
 import lab3.gradebook.nc.model.entities.Location;
 import lab3.gradebook.nc.model.entities.LocationType;
+import lab3.gradebook.nc.model.services.CheckSubtypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

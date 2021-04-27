@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -41,6 +42,13 @@ public class ApiSubjectController {
         } else {
             return customFormatResponseBody.buildResponse(true, daoSubject.getByLessonId(lessonId));
         }
+    }
+
+    @GetMapping("teaching/{login}")
+    @ResponseBody
+    public String teachingSubjects(@PathVariable String login) throws DAOException, JsonProcessingException {
+        List<Subject> subjects = daoSubject.getTeachingByLogin(login);
+        return customFormatResponseBody.buildResponse(true, subjects);
     }
 
     @GetMapping("{id}")

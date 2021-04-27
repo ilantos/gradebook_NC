@@ -81,26 +81,6 @@ public class MainController {
         response.addCookie(new Cookie("idSubject", String.valueOf(id)));
         return "/pages/form_subject";
     }
-    @GetMapping("/lessons/{id}")
-    public String lessonPage(@PathVariable int id,
-                             HttpServletResponse response) {
-        response.addCookie(new Cookie("idLesson", String.valueOf(id)));
-        return "/pages/lesson";
-    }
-
-    @GetMapping("/lessons/add")
-    public String addLessonPage(HttpServletResponse response) {
-        response.addCookie(new Cookie("formLesson", "add"));
-        return "/pages/form_lesson";
-    }
-
-    @GetMapping("/lessons/edit/{id}")
-    public String editLessonPage(@PathVariable int id,
-                                 HttpServletResponse response) {
-        response.addCookie(new Cookie("formLesson", "edit"));
-        response.addCookie(new Cookie("idLesson", String.valueOf(id)));
-        return "/pages/form_lesson";
-    }
 
     private String getCurrentUser() {
         Authentication authentication =
