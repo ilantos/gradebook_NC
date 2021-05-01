@@ -6,6 +6,7 @@ function configureForm() {
     $.ajax({
         url:"/api/locations",
         type:"get",
+        async:false,
         complete:[
             function (response) {
                 console.log(response);
@@ -15,7 +16,7 @@ function configureForm() {
                 if (answer.response == true) {
                     $.each(answer.message, function(key, value) {
                         if (value.locationType === 'UNIVERSITY' || value.locationType === 'GROUP')
-                        $('#location').append('<option value="'+ value.id +'" loc-parent-type="' + value.locationType + '">'+ value.title + '</option>');
+                        $('#location').append('<option data-tokens="'+ value.title + '" value="'+ value.id +'" loc-parent-type="' + value.locationType + '">'+ value.title + '</option>');
                     });
                 }
             }

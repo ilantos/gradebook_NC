@@ -34,7 +34,7 @@ public class DaoConfig {
             Class.forName(this.driverClass);
             connection = DriverManager.getConnection(this.url, props);
         } catch (SQLException | ClassNotFoundException e) {
-            throw new DAOException("Cannot get connection to db", e);
+            throw new DAOException(e.getMessage(), e);
         }
         return connection;
     }
