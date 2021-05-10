@@ -1,6 +1,7 @@
 package lab3.gradebook.nc.model.db;
 
 import lab3.gradebook.nc.model.entities.Lesson;
+import lab3.gradebook.nc.model.entities.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DaoLesson {
@@ -20,7 +23,9 @@ public class DaoLesson {
     public DaoLesson(Connection connection) {
         this.connection = connection;
     }
-    public List<Lesson> getLessonsBySubjectId(int idSubject) throws DAOException {
+
+    public List<Lesson> getLessonsBySubjectId(int idSubject)
+            throws DAOException {
         List<Lesson> lessons = new ArrayList<>();
         try {
             String query = "SELECT * FROM lesson"
@@ -34,8 +39,18 @@ public class DaoLesson {
                 String title = resultSet.getString(3);
                 String description = resultSet.getString(4);
                 int maxGrade = resultSet.getInt(5);
-                LocalDateTime creationDate = resultSet.getTimestamp(6).toLocalDateTime();
-                lessons.add(new Lesson(id, title, description, maxGrade, creationDate));
+                LocalDateTime creationDate = resultSet
+                        .getTimestamp(6)
+                        .toLocalDateTime();
+                lessons.add(
+                    new Lesson(
+                        id,
+                        title,
+                        description,
+                        maxGrade,
+                        creationDate
+                    )
+                );
             }
         } catch (SQLException e) {
             throw new DAOException("Cannot get all locations", e);
@@ -43,6 +58,58 @@ public class DaoLesson {
         return lessons;
     }
 
+    public Map<Person, Double> getGradesOfStudents(int idLesson)
+            throws DAOException {
+        Map<Person, Double> grades = new HashMap<>();
+        try {
+            String query = "SELECT p.*, lg.grade"
+                    + " FROM lesson_grade lg"
+                    + " JOIN person p ON (p.id_person = lg.id_person"
+                    + "                   AND lg.id_lesson = ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, idLesson);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                grades.put(
+                        new Person(
+                            resultSet.getInt(1),
+                            resultSet.getInt(2),
+                            resultSet.getString(3),
+                            resultSet.getString(4),
+                            resultSet.getString(5),
+                            resultSet.getString(6),
+                            resultSet.getString(7),
+                            resultSet.getString(8),
+                            resultSet.getBoolean(9)
+                        ),
+                        resultSet.getDouble(10));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+        return grades;
+    }
+
+    public void editGrade(
+            int idLesson,
+            int idStudent,
+            double grade) throws DAOException {
+        try {
+            String sql = "UPDATE lesson_grade SET grade = ?"
+                    + " WHERE id_lesson = ? AND id_person = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setDouble(1, grade);
+            statement.setInt(2, idLesson);
+            statement.setInt(3, idStudent);
+            int result = statement.executeUpdate();
+            if (result != 1) {
+                throw new DAOException(
+                        "Update few rows. Must update only one row");
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+    }
     public Lesson getById(int idLesson) throws DAOException {
         Lesson lesson = null;
         try {
@@ -56,12 +123,20 @@ public class DaoLesson {
                 int id = resultSet.getInt(1);
                 String title = resultSet.getString(3);
                 String description = resultSet.getString(4);
-                float max_grade = resultSet.getInt(5);
-                LocalDateTime creation_date = resultSet.getTimestamp(6).toLocalDateTime();
-                lesson = new Lesson(id, title, description, max_grade, creation_date);
+                float maxGrade = resultSet.getInt(5);
+                LocalDateTime creationDate = resultSet
+                        .getTimestamp(6)
+                        .toLocalDateTime();
+                lesson = new Lesson(
+                        id,
+                        title,
+                        description,
+                        maxGrade,
+                        creationDate);
             }
         } catch (SQLException e) {
-            throw new DAOException("Cannot get lesson with id = " + idLesson, e);
+            throw new DAOException(
+                    "Cannot get lesson with id = " + idLesson, e);
         }
         return lesson;
     }
@@ -69,11 +144,11 @@ public class DaoLesson {
     public void edit(Lesson lesson) throws DAOException {
         try {
             String query =
-                    "UPDATE lesson" +
-                            "   SET title=?," +
-                            "   description=?," +
-                            "   max_grade=?" +
-                            " WHERE id_lesson=?;";
+                    "UPDATE lesson"
+                            + "   SET title=?,"
+                            + "   description=?,"
+                            + "   max_grade=?"
+                            + " WHERE id_lesson=?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, lesson.getTitle());
             statement.setString(2, lesson.getDescription());
@@ -81,7 +156,8 @@ public class DaoLesson {
             statement.setInt(4,  lesson.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot update subject with id = " + lesson.getId(), e);
+            throw new DAOException("Cannot update subject with id = "
+                    + lesson.getId(), e);
         }
     }
 
@@ -95,12 +171,13 @@ public class DaoLesson {
             throw new DAOException("Cannot get all subjects", e);
         }
     }
+
     public void add(Lesson lesson, int subjectId) throws DAOException {
         try {
             String query =
-                    "INSERT INTO lesson(" +
-                            "id_subject, title, description, max_grade)" +
-                            "VALUES (?, ?, ?, ?);";
+                    "INSERT INTO lesson("
+                            + "id_subject, title, description, max_grade)"
+                            + "VALUES (?, ?, ?, ?);";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, subjectId);
             statement.setString(2, lesson.getTitle());

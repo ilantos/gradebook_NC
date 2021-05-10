@@ -15,6 +15,7 @@ function lessonPage(id) {
                     let creationDate = lesson.creationDate;
                     $('#lesson-page-creation-date').text(creationDate.year + "." + creationDate.monthValue + "." + creationDate.dayOfMonth);
                     $('#lesson-cancel-button').attr("onclick", "subjectPageByLessonId(" + id + ")");
+                    localStorage.setItem('maxGrade', lesson.maxGrade);
                 } else {
                     alert("Some problems at server");
                 }

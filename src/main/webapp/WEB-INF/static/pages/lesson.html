@@ -13,6 +13,9 @@
 <body onload="lessonPage(getCookie('idLesson'))">
 <div id="header-container"><!--Template for header--></div>
 <div class="container">
+    <div id="container-to-grades">
+
+    </div>
     <div id="content-container">
         <div class="container">
             <div class="col-6">
@@ -36,6 +39,14 @@
 <script src="/resources/subjects.js"></script>
 <script src="/resources/lessons.js"></script>
 <script src="/resources/cookie.js"></script>
-
+<script>
+    $(document).ready(function () {
+        let mode = getCookie("personMode");
+        let lesson = getCookie("idLesson");
+        if (mode === "teacher") {
+            $('#container-to-grades').append('<button class="btn btn-primary" onclick="location.href=\'/lessons/' + lesson + '/grades\'">Grades</button>');
+        }
+    });
+</script>
 </body>
 </html>

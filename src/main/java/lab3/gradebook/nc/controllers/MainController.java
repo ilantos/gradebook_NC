@@ -52,9 +52,11 @@ public class MainController {
         return "/pages/form_location";
     }
     @GetMapping("/teaching")
-    public String subjectsPageTeaching() {
+    public String subjectsPageTeaching(HttpServletResponse response) {
+        response.addCookie(new Cookie("personMode", "teacher"));
         return "pages/subjects_teaching";
     }
+
 
     @GetMapping("/subjects")
     public String subjectsPage() {
