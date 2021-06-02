@@ -1,6 +1,5 @@
 package lab3.gradebook.nc.model.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,11 +7,15 @@ import lombok.Setter;
 import java.util.List;
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Subject {
-    private int id;
-    private String title;
-    private String description;
+public class Subject extends AbstractSubject {
     private List<Lesson> lessons;
+
+    public Subject(int id,
+                   String title,
+                   String description,
+                   List<Lesson> lessons) {
+        super(id, title, description);
+        this.lessons = lessons;
+    }
 }

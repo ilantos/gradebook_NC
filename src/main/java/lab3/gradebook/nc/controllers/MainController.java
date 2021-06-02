@@ -57,6 +57,11 @@ public class MainController {
         return "pages/subjects_teaching";
     }
 
+    @GetMapping("/studying")
+    public String subjectsPageStudying(HttpServletResponse response) {
+        response.addCookie(new Cookie("personMode", "student"));
+        return "pages/subjects_studying";
+    }
 
     @GetMapping("/subjects")
     public String subjectsPage() {
@@ -68,6 +73,13 @@ public class MainController {
                               HttpServletResponse response) {
         response.addCookie(new Cookie("idSubject", String.valueOf(id)));
         return "/pages/subject";
+    }
+
+    @GetMapping("/studying/subjects/{id}")
+    public String subjectStudyingPage(@PathVariable int id,
+                              HttpServletResponse response) {
+        response.addCookie(new Cookie("idSubject", String.valueOf(id)));
+        return "/pages/subject_studying";
     }
 
     @GetMapping("/subjects/add")

@@ -2,6 +2,7 @@ package lab3.gradebook.nc.model.db;
 
 import lab3.gradebook.nc.model.entities.Lesson;
 import lab3.gradebook.nc.model.entities.Person;
+import lab3.gradebook.nc.model.entities.StudentLesson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,53 @@ public class DaoLesson {
                         maxGrade,
                         creationDate
                     )
+                );
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Cannot get all locations", e);
+        }
+        return lessons;
+    }
+
+    public List<StudentLesson> getStudentLessonsBySubjectId(
+            int idSubject,
+            String login) throws DAOException {
+        List<StudentLesson> lessons = new ArrayList<>();
+        try {
+            String query = "select l.*, "
+                    + "       p.first_name || ' ' || p.last_name as student, "
+                    + "       lg.grade "
+                    + "  from lesson l "
+                    + "  join lesson_grade lg on (l.id_lesson = lg.id_lesson) "
+                    + "  join person p on lg.id_person = p.id_person "
+                    + "  where p.id_person = "
+                    + "        (select id_person from person where login = ?) "
+                    + "    and lg.id_subject = ?;";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(2, idSubject);
+            statement.setString(1, login);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String title = resultSet.getString(3);
+                String description = resultSet.getString(4);
+                int maxGrade = resultSet.getInt(5);
+                LocalDateTime creationDate = resultSet
+                        .getTimestamp(6)
+                        .toLocalDateTime();
+                String student = resultSet.getString(7);
+                double grade = resultSet.getDouble(8);
+                lessons.add(
+                        new StudentLesson(
+                                id,
+                                title,
+                                description,
+                                maxGrade,
+                                creationDate,
+                                student,
+                                grade
+                        )
                 );
             }
         } catch (SQLException e) {

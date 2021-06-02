@@ -1,15 +1,12 @@
 package lab3.gradebook.nc.model.db;
 
+import lab3.gradebook.nc.model.StudyRole;
+import lab3.gradebook.nc.model.entities.SubjectWithGrades;
 import lab3.gradebook.nc.model.entities.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,16 +41,18 @@ public class DaoSubject {
         return subjects;
     }
 
-    public List<Subject> getTeachingByLogin(String login) throws DAOException {
+    public List<Subject> getByLoginAndRole(String login, StudyRole role)
+            throws DAOException {
         List<Subject> subjects = new ArrayList<>();
         try {
-            String query = "SELECT s.*" +
-                    "  FROM person p" +
-                    "  JOIN person_subject ps ON (ps.id_person = p.id_person)" +
-                    "  JOIN subject s ON (s.id_subject = ps.id_subject)" +
-                    " WHERE p.login = ? AND ps.person_role = 'TEACHER';";
+            String query = "SELECT s.*"
+                    + "  FROM person p"
+                    + "  JOIN person_subject ps ON (ps.id_person = p.id_person)"
+                    + "  JOIN subject s ON (s.id_subject = ps.id_subject)"
+                    + " WHERE p.login = ? AND ps.person_role = ?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, login);
+            statement.setObject(2, role, Types.OTHER);
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -65,19 +64,21 @@ public class DaoSubject {
             }
 
         } catch (SQLException e) {
+            System.out.println(e);
             throw new DAOException(e.getMessage(), e);
         }
         return subjects;
     }
 
-    public boolean isAvailableForUser(int id, String login) throws DAOException {
+    public boolean isAvailableForUser(int id, String login)
+            throws DAOException {
         try {
-            String query = "SELECT p.login, ps.id_subject " +
-                    "FROM person p " +
-                    "JOIN person_subject ps ON (ps.id_person = p.id_person) " +
-                    "WHERE p.login = ? " +
-                    "  AND ps.id_subject = ? " +
-                    "  AND ps.person_role = 'TEACHER';";
+            String query = "SELECT p.login, ps.id_subject "
+                    + "FROM person p "
+                    + "JOIN person_subject ps ON (ps.id_person = p.id_person) "
+                    + "WHERE p.login = ? "
+                    + "  AND ps.id_subject = ? "
+                    + "  AND ps.person_role = 'TEACHER';";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, login);
             statement.setInt(2, id);
@@ -102,19 +103,52 @@ public class DaoSubject {
                 int id = resultSet.getInt(1);
                 String title = resultSet.getString(2);
                 String description = resultSet.getString(3);
-                subject = new Subject(id, title, description, daoLesson.getLessonsBySubjectId(idSubject));
+                subject = new Subject(
+                        id,
+                        title,
+                        description,
+                        daoLesson.getLessonsBySubjectId(idSubject));
             }
         } catch (SQLException e) {
-            throw new DAOException("Cannot get subject with id = " + idSubject, e);
+            throw new DAOException("Cannot get subject with id = "
+                    + idSubject, e);
         }
         return subject;
     }
+
+    public SubjectWithGrades getWithGradesById(int idSubject, String login)
+            throws DAOException {
+        SubjectWithGrades subject = null;
+        try {
+            String query = "SELECT * FROM subject"
+                    + " WHERE id_subject=?;";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, idSubject);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String title = resultSet.getString(2);
+                String description = resultSet.getString(3);
+                subject = new SubjectWithGrades(
+                        id,
+                        title,
+                        description,
+                        daoLesson.getStudentLessonsBySubjectId(idSubject,
+                                login));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Cannot get subject with id = "
+                    + idSubject, e);
+        }
+        return subject;
+    }
+
     public Subject getByLessonId(int idLesson) throws DAOException {
         Subject subject = null;
         try {
-            String query =
-                    "SELECT s.*" +
-                    "FROM lesson l, subject s"
+            String query = "SELECT s.*"
+                    + "FROM lesson l, subject s"
                     + " WHERE l.id_lesson=? AND s.id_subject = l.id_subject;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, idLesson);
@@ -123,9 +157,14 @@ public class DaoSubject {
             int id = resultSet.getInt(1);
             String title = resultSet.getString(2);
             String description = resultSet.getString(3);
-            subject = new Subject(id, title, description, daoLesson.getLessonsBySubjectId(id));
+            subject = new Subject(
+                    id,
+                    title,
+                    description,
+                    daoLesson.getLessonsBySubjectId(id));
         } catch (SQLException e) {
-            throw new DAOException("Cannot get subject with idLesson = " + idLesson, e);
+            throw new DAOException("Cannot get subject with idLesson = "
+                    + idLesson, e);
         }
         return subject;
     }
@@ -133,17 +172,18 @@ public class DaoSubject {
     public void edit(Subject subject) throws DAOException {
         try {
             String query =
-                    "UPDATE subject" +
-                            "   SET title=?," +
-                            "   description=?" +
-                            " WHERE id_subject=?;";
+                    "UPDATE subject"
+                            + "   SET title=?,"
+                            + "   description=?"
+                            + " WHERE id_subject=?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, subject.getTitle());
             statement.setString(2, subject.getDescription());
             statement.setInt(3, subject.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot update subject with id = " + subject.getId(), e);
+            throw new DAOException("Cannot update subject with id = "
+                    + subject.getId(), e);
         }
     }
 
@@ -160,9 +200,9 @@ public class DaoSubject {
     public void add(Subject subject) throws DAOException {
         try {
             String query =
-                    "INSERT INTO subject(" +
-                            "title, description)" +
-                            "VALUES (?, ?);";
+                    "INSERT INTO subject("
+                            + "title, description)"
+                            + "VALUES (?, ?);";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setObject(1, subject.getTitle());
             statement.setString(2, subject.getDescription());

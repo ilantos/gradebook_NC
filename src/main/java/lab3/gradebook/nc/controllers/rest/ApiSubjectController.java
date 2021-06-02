@@ -2,8 +2,10 @@ package lab3.gradebook.nc.controllers.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
+import lab3.gradebook.nc.model.StudyRole;
 import lab3.gradebook.nc.model.db.DAOException;
 import lab3.gradebook.nc.model.db.DaoSubject;
+import lab3.gradebook.nc.model.entities.SubjectWithGrades;
 import lab3.gradebook.nc.model.entities.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,7 +50,14 @@ public class ApiSubjectController {
     @GetMapping("teaching/{login}")
     @ResponseBody
     public String teachingSubjects(@PathVariable String login) throws DAOException, JsonProcessingException {
-        List<Subject> subjects = daoSubject.getTeachingByLogin(login);
+        List<Subject> subjects = daoSubject.getByLoginAndRole(login, StudyRole.TEACHER);
+        return customFormatResponseBody.buildResponse(true, subjects);
+    }
+
+    @GetMapping("studying/{login}")
+    @ResponseBody
+    public String studyingSubjects(@PathVariable String login) throws DAOException, JsonProcessingException {
+        List<Subject> subjects = daoSubject.getByLoginAndRole(login, StudyRole.STUDENT);
         return customFormatResponseBody.buildResponse(true, subjects);
     }
 
@@ -61,6 +71,18 @@ public class ApiSubjectController {
                         false,
                         "Cannot find location by id");
     }
+
+    @GetMapping("/{id}/studying")
+    @ResponseBody
+    public String getSubjectWithGradesById(@PathVariable int id, Principal principal) throws JsonProcessingException, DAOException {
+        SubjectWithGrades subject = daoSubject.getWithGradesById(id, principal.getName());
+        return subject != null ?
+                customFormatResponseBody.buildResponse(true, subject) :
+                customFormatResponseBody.buildResponse(
+                        false,
+                        "Cannot find location by id");
+    }
+
     @DeleteMapping("{id}")
     @ResponseBody
     public String delete(@PathVariable int id) throws JsonProcessingException {

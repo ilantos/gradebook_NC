@@ -9,6 +9,7 @@ function getAllSubjects() {
         type:"get",
         complete:[
             function (response) {
+                console.log(response);
                 let answer = $.parseJSON(response.responseText);
                 console.log(answer);
                 if (answer.response == true) {
