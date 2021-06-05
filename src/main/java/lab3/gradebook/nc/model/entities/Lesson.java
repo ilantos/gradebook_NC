@@ -17,4 +17,5 @@ public class Lesson {
     private String description;
     private float maxGrade;
     private LocalDateTime creationDate;
+    private LocalDateTime startDate;
 }

@@ -99,4 +99,13 @@ public class ApiPersonController {
             return customFormatResponseBody.buildResponse(false, "User added unsuccessfully");
         }
     }
+    @GetMapping("/schedule/{username}")
+    @ResponseBody
+    public String getSchedule(@PathVariable String username) throws JsonProcessingException {
+        try {
+            return customFormatResponseBody.buildResponse(true, daoPerson.getSchedule(username));
+        } catch (DAOException e) {
+            return customFormatResponseBody.buildResponse(false, "Can't get schedule: " + e.getMessage());
+        }
+    }
 }

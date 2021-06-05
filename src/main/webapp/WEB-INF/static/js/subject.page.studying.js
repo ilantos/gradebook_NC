@@ -33,7 +33,8 @@ function renderLessons(lessons) {
             '            <td>' + value.description + '</td>' +
             '            <td>' + value.maxGrade + '</td>'+
             '            <td>' + value.grade + '</td>'+
-            '            <td>' + value.creationDate.year + '.' +  value.creationDate.monthValue + '.' + value.creationDate.dayOfMonth + '</td>' +
+            '            <td>' + dateFromLocalDateTime(value.creationDate) + '</td>' +
+            '            <td>' + dateTimeFromLocalDateTime(value.startDate) + '</td>' +
             '        </tr>')
 
 

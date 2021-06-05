@@ -1,10 +1,13 @@
 package lab3.gradebook.nc.model.db;
 
+import lab3.gradebook.nc.model.entities.Lesson;
 import lab3.gradebook.nc.model.entities.Person;
+import lab3.gradebook.nc.model.entities.ScheduleEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,5 +149,36 @@ public class DaoPerson {
         } catch (SQLException e) {
             throw new DAOException(e.getMessage(), e);
         }
+    }
+
+    public List<ScheduleEntry> getSchedule(String username) throws DAOException {
+        List<ScheduleEntry> scheduleList = new ArrayList<>();
+        try {
+            String query = "SELECT s.title, l.*\n" +
+                    "FROM person p\n" +
+                    "JOIN person_subject ps on p.id_person = ps.id_person\n" +
+                    "JOIN subject s on ps.id_subject = s.id_subject\n" +
+                    "JOIN lesson l on s.id_subject = l.id_subject\n" +
+                    "WHERE p.login = ?\n" +
+                    "ORDER BY l.start_date;";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id_lesson");
+                String subjectTitle = resultSet.getString(1);
+                String lessonTitle = resultSet.getString(4);
+                String description = resultSet.getString("description");
+                float maxGrade = resultSet.getFloat("max_grade");
+                LocalDateTime creationDate = resultSet.getTimestamp("creation_date").toLocalDateTime();
+                LocalDateTime startDate = resultSet.getTimestamp("start_date").toLocalDateTime();
+                Lesson lesson = new Lesson(id, lessonTitle, description, maxGrade, creationDate, startDate);
+                scheduleList.add(new ScheduleEntry(subjectTitle, lesson));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+        return scheduleList;
     }
 }

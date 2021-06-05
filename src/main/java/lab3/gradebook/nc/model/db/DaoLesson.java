@@ -6,10 +6,7 @@ import lab3.gradebook.nc.model.entities.StudentLesson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,19 +36,14 @@ public class DaoLesson {
                 int id = resultSet.getInt(1);
                 String title = resultSet.getString(3);
                 String description = resultSet.getString(4);
-                int maxGrade = resultSet.getInt(5);
+                float maxGrade = resultSet.getFloat(5);
                 LocalDateTime creationDate = resultSet
                         .getTimestamp(6)
                         .toLocalDateTime();
-                lessons.add(
-                    new Lesson(
-                        id,
-                        title,
-                        description,
-                        maxGrade,
-                        creationDate
-                    )
-                );
+                LocalDateTime startDate = resultSet
+                        .getTimestamp(7)
+                        .toLocalDateTime();
+                lessons.add(new Lesson(id, title, description, maxGrade, creationDate, startDate));
             }
         } catch (SQLException e) {
             throw new DAOException("Cannot get all locations", e);
@@ -72,7 +64,7 @@ public class DaoLesson {
                     + "  join person p on lg.id_person = p.id_person "
                     + "  where p.id_person = "
                     + "        (select id_person from person where login = ?) "
-                    + "    and lg.id_subject = ?;";
+                    + "    and lg.id_subject = ? ORDER BY l.start_date;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(2, idSubject);
             statement.setString(1, login);
@@ -86,8 +78,11 @@ public class DaoLesson {
                 LocalDateTime creationDate = resultSet
                         .getTimestamp(6)
                         .toLocalDateTime();
-                String student = resultSet.getString(7);
-                double grade = resultSet.getDouble(8);
+                LocalDateTime startDate = resultSet
+                        .getTimestamp(7)
+                        .toLocalDateTime();
+                String student = resultSet.getString(8);
+                double grade = resultSet.getDouble(9);
                 lessons.add(
                         new StudentLesson(
                                 id,
@@ -95,6 +90,7 @@ public class DaoLesson {
                                 description,
                                 maxGrade,
                                 creationDate,
+                                startDate,
                                 student,
                                 grade
                         )
@@ -175,12 +171,10 @@ public class DaoLesson {
                 LocalDateTime creationDate = resultSet
                         .getTimestamp(6)
                         .toLocalDateTime();
-                lesson = new Lesson(
-                        id,
-                        title,
-                        description,
-                        maxGrade,
-                        creationDate);
+                LocalDateTime startDate = resultSet
+                        .getTimestamp(7)
+                        .toLocalDateTime();
+                lesson = new Lesson(id, title, description, maxGrade, creationDate, startDate);
             }
         } catch (SQLException e) {
             throw new DAOException(
@@ -195,13 +189,15 @@ public class DaoLesson {
                     "UPDATE lesson"
                             + "   SET title=?,"
                             + "   description=?,"
-                            + "   max_grade=?"
+                            + "   max_grade=?,"
+                            + "   start_date=?"
                             + " WHERE id_lesson=?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, lesson.getTitle());
             statement.setString(2, lesson.getDescription());
             statement.setFloat(3, lesson.getMaxGrade());
-            statement.setInt(4,  lesson.getId());
+            statement.setTimestamp(4, Timestamp.valueOf(lesson.getStartDate()));
+            statement.setInt(5,  lesson.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Cannot update subject with id = "
@@ -224,13 +220,14 @@ public class DaoLesson {
         try {
             String query =
                     "INSERT INTO lesson("
-                            + "id_subject, title, description, max_grade)"
+                            + "id_subject, title, description, max_grade, start_date)"
                             + "VALUES (?, ?, ?, ?);";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, subjectId);
             statement.setString(2, lesson.getTitle());
             statement.setString(3, lesson.getDescription());
             statement.setFloat(4, lesson.getMaxGrade());
+            statement.setTimestamp(4, Timestamp.valueOf(lesson.getStartDate()));
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Cannot get all lessons", e);

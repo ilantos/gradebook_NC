@@ -14,49 +14,37 @@
 <div id="header-container"><!--Template for header--></div>
 <div class="container">
     <div id="content-container">
-        <form id="form-lesson" class="needs-validation" novalidate="">
+        <form id="form-subject" class="needs-validation" novalidate="" action="/studying">
             <div class="row g-3">
                 <div class="col-12">
                     <h3 id="form-headline"><!--template--></h3>
                 </div>
                 <div class="col-4">
                     <label for="form-title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="form-title" required="">
-                </div>
-            </div>
-            <div class="row g-3">
-                <div class="col-4">
-                    <label for="form-title" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="form-description" required="">
-                </div>
-            </div>
-            <div class="row g-3">
-                <div class="col-4">
-                    <label for="form-title" class="form-label">Max grade</label>
-                    <input type="text" class="form-control" id="form-max-grade" required="">
-                </div>
-            </div>
-            <div class="row g-3">
-                <div class="col-4">
-                    <label for="form-title" class="form-label">Start date</label>
-                    <input type="datetime-local" class="form-control" id="form-start-date" required="">
+                    <select name="subjectId" class="form-control" id="form-title" required="">
+
+                    </select>
                 </div>
             </div>
             <hr class="my-4">
             <div class="row g-3">
                 <div class="col-1">
-                    <button id="form-button-submit" class="btn btn-primary" onclick="requestToAdd()">Add</button>
+                    <button id="form-button-submit" class="btn btn-primary" onclick="requestToEnroll()">Enroll</button>
                 </div>
                 <div class="col-1">
-                    <button id="lesson-cancel-button" class="btn btn-danger">Cancel</button>
+                    <button class="btn btn-danger"><a class="link-light" href="/studying">Cancel</a></button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<script src="/resources/header.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#header-container').load('/resources/header_user.html');
+    });
+</script>
 <script src="/resources/cookie.js"></script>
-<script src="/resources/lesson.form.js"></script>
+<script src="/resources/subject.enroll.form.js"></script>
 
 </body>
 </html>

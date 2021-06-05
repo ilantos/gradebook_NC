@@ -33,7 +33,8 @@ CREATE TABLE lesson (
 	title VARCHAR (100),
 	description VARCHAR (500),
 	max_grade NUMERIC (5, 2),
-	creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+	creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	start_date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE person_subject (

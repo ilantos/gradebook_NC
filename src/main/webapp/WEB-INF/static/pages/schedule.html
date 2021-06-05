@@ -17,14 +17,13 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Title</th>
-                <th scope="col">Description</th>
+                <th scope="col">Lesson starts</th>
+                <th scope="col">Subject</th>
+                <th scope="col">Lesson</th>
             </tr>
             </thead>
-            <tbody id="subjects-table"> </tbody>
+            <tbody id="schedule-table"> </tbody>
         </table>
-        <button class="btn btn-info" onclick="location.href='/subjectEnroll'">Enroll in a subject</button>
     </div>
 </div>
 <script src="/resources/cookie.js"></script>
@@ -33,6 +32,7 @@
         $('#header-container').load('/resources/header_user.html');
     });
 </script>
-<script src="/resources/subjects.studying.js"></script>
+<script src="/resources/schedule.js"></script>
+<script src="/resources/TimeUtils.js"></script>
 </body>
 </html>
