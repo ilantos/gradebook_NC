@@ -1,6 +1,7 @@
 package lab3.gradebook.nc.model.db;
 
 import lab3.gradebook.nc.model.StudyRole;
+import lab3.gradebook.nc.model.entities.Person;
 import lab3.gradebook.nc.model.entities.SubjectWithGrades;
 import lab3.gradebook.nc.model.entities.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import java.util.List;
 public class DaoSubject {
     private final Connection connection;
     private final DaoLesson daoLesson;
+    private final DaoPerson daoPerson;
 
     @Autowired
-    public DaoSubject(Connection connection, DaoLesson daoLesson) {
+    public DaoSubject(Connection connection, DaoLesson daoLesson, DaoPerson daoPerson) {
         this.connection = connection;
         this.daoLesson = daoLesson;
+        this.daoPerson = daoPerson;
     }
 
     public List<Subject> getAll() throws DAOException {
@@ -28,12 +31,7 @@ public class DaoSubject {
             String query = "SELECT * FROM subject;";
             ResultSet resultSet = statement.executeQuery(query);
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String title = resultSet.getString(2);
-                String description = resultSet.getString(3);
-                subjects.add(new Subject(id, title, description, null));
-            }
+            resultSetToSubjectList(resultSet);
 
         } catch (SQLException e) {
             throw new DAOException("Cannot get all subjects", e);
@@ -43,7 +41,7 @@ public class DaoSubject {
 
     public List<Subject> getByLoginAndRole(String login, StudyRole role)
             throws DAOException {
-        List<Subject> subjects = new ArrayList<>();
+        List<Subject> subjects;
         try {
             String query = "SELECT s.*"
                     + "  FROM person p"
@@ -56,12 +54,7 @@ public class DaoSubject {
 
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String title = resultSet.getString(2);
-                String description = resultSet.getString(3);
-                subjects.add(new Subject(id, title, description, null));
-            }
+            subjects = resultSetToSubjectList(resultSet);
 
         } catch (SQLException e) {
             System.out.println(e);
@@ -169,6 +162,37 @@ public class DaoSubject {
         return subject;
     }
 
+    public List<Subject> getUnrolledSubjectsByUsername(String username) throws DAOException {
+        List<Subject> subjects;
+        try {
+            String query = "SELECT s.*\n" +
+                    "FROM person\n" +
+                    "JOIN person_subject ps\n" +
+                    "ON person.id_person = ps.id_person AND login = ?\n" +
+                    "FULL OUTER JOIN subject s\n" +
+                    "ON s.id_subject = ps.id_subject\n" +
+                    "WHERE ps.id_person IS NULL;";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            subjects = resultSetToSubjectList(resultSet);
+        } catch (SQLException e) {
+            throw new DAOException("Cannot find unrolled subjects where username = " + username, e);
+        }
+        return subjects;
+    }
+
+    private List<Subject> resultSetToSubjectList(ResultSet resultSet) throws SQLException {
+        List<Subject> subjects = new ArrayList<>();
+        while (resultSet.next()) {
+            int id = resultSet.getInt(1);
+            String title = resultSet.getString(2);
+            String description = resultSet.getString(3);
+            subjects.add(new Subject(id, title, description, null));
+        }
+        return subjects;
+    }
+
     public void edit(Subject subject) throws DAOException {
         try {
             String query =
@@ -209,6 +233,19 @@ public class DaoSubject {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Cannot get all subjects", e);
+        }
+    }
+
+    public void enrollUserInSubject(String username, int subjectId) throws DAOException {
+        try {
+            Person person = daoPerson.getByLogin(username);
+            String query = "INSERT INTO person_subject(id_person, id_subject, person_role) VALUES (?, ?, 'STUDENT')";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, person.getId());
+            statement.setInt(2, subjectId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("", e);
         }
     }
 }

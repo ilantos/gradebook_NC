@@ -62,6 +62,11 @@ public class MainController {
         response.addCookie(new Cookie("personMode", "student"));
         return "pages/subjects_studying";
     }
+    @GetMapping("/schedule")
+    public String userSchedulePage(HttpServletResponse response) {
+        response.addCookie(new Cookie("personMode", "student"));
+        return "pages/schedule";
+    }
 
     @GetMapping("/subjects")
     public String subjectsPage() {

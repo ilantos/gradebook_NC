@@ -82,7 +82,25 @@ public class ApiSubjectController {
                         false,
                         "Cannot find location by id");
     }
-
+    @PostMapping("/{username}/enroll")
+    @ResponseBody
+    public String enrollUserInSubject(@PathVariable String username, @RequestParam int subjectId) throws JsonProcessingException {
+        try {
+            daoSubject.enrollUserInSubject(username, subjectId);
+            return customFormatResponseBody.buildResponse(true, "User enrolled in subject");
+        } catch (DAOException e) {
+            return customFormatResponseBody.buildResponse(false, "Can't enroll user \"" + username + "\" in subject ");
+        }
+    }
+    @GetMapping("/{username}/unrolledSubjects")
+    @ResponseBody
+    public String getUnrolledSubjects(@PathVariable String username) throws JsonProcessingException {
+        try {
+            return customFormatResponseBody.buildResponse(true, daoSubject.getUnrolledSubjectsByUsername(username));
+        } catch (DAOException e) {
+            return customFormatResponseBody.buildResponse(false, "Can't get unrolled subjects: " + e.getMessage());
+        }
+    }
     @DeleteMapping("{id}")
     @ResponseBody
     public String delete(@PathVariable int id) throws JsonProcessingException {

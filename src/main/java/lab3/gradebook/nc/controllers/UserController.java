@@ -53,7 +53,10 @@ UserController {
         response.addCookie(new Cookie("idUser", String.valueOf(id)));
         return "/pages/user";
     }
-
+    @GetMapping("/subjectEnroll")
+    public String subjectEnrollPage() {
+        return "/pages/form_subject_enroll";
+    }
     @GetMapping("/users/add")
     public String addSubjectPage(HttpServletResponse response) {
         response.addCookie(new Cookie("formUser", "add"));

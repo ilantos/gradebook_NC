@@ -18,9 +18,10 @@ public class StudentLesson extends Lesson {
                          String description,
                          float maxGrade,
                          LocalDateTime creationDate,
+                         LocalDateTime startDate,
                          String student,
                          double grade) {
-        super(id, title, description, maxGrade, creationDate);
+        super(id, title, description, maxGrade, creationDate, startDate);
         this.student = student;
         this.grade = grade;
     }
