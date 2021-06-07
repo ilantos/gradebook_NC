@@ -8,6 +8,7 @@ function getAllSubjects() {
         type:"get",
         complete:[
             function (response) {
+                console.log(response);
                 let answer = $.parseJSON(response.responseText);
                 if (answer.response == true) {
                     renderSubject(answer.message);

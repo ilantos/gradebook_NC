@@ -18,7 +18,9 @@ public class DaoSubject {
     private final DaoPerson daoPerson;
 
     @Autowired
-    public DaoSubject(Connection connection, DaoLesson daoLesson, DaoPerson daoPerson) {
+    public DaoSubject(Connection connection,
+                      DaoLesson daoLesson,
+                      DaoPerson daoPerson) {
         this.connection = connection;
         this.daoLesson = daoLesson;
         this.daoPerson = daoPerson;
@@ -31,7 +33,7 @@ public class DaoSubject {
             String query = "SELECT * FROM subject;";
             ResultSet resultSet = statement.executeQuery(query);
 
-            resultSetToSubjectList(resultSet);
+            subjects = resultSetToSubjectList(resultSet);
 
         } catch (SQLException e) {
             throw new DAOException("Cannot get all subjects", e);
@@ -162,27 +164,32 @@ public class DaoSubject {
         return subject;
     }
 
-    public List<Subject> getUnrolledSubjectsByUsername(String username) throws DAOException {
+    public List<Subject> getUnrolledSubjectsByUsername(String username)
+            throws DAOException {
         List<Subject> subjects;
         try {
-            String query = "SELECT s.*\n" +
-                    "FROM person\n" +
-                    "JOIN person_subject ps\n" +
-                    "ON person.id_person = ps.id_person AND login = ?\n" +
-                    "FULL OUTER JOIN subject s\n" +
-                    "ON s.id_subject = ps.id_subject\n" +
-                    "WHERE ps.id_person IS NULL;";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            String query = "SELECT s.*\n"
+                    + "FROM person\n"
+                    + "JOIN person_subject ps\n"
+                    + "ON person.id_person = ps.id_person AND login = ?\n"
+                    + "FULL OUTER JOIN subject s\n"
+                    + "ON s.id_subject = ps.id_subject\n"
+                    + "WHERE ps.id_person IS NULL;";
+            PreparedStatement preparedStatement
+                    = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             subjects = resultSetToSubjectList(resultSet);
         } catch (SQLException e) {
-            throw new DAOException("Cannot find unrolled subjects where username = " + username, e);
+            throw new DAOException("Cannot find unrolled"
+                    + "subjects where username = "
+                    + username, e);
         }
         return subjects;
     }
 
-    private List<Subject> resultSetToSubjectList(ResultSet resultSet) throws SQLException {
+    private List<Subject> resultSetToSubjectList(ResultSet resultSet)
+            throws SQLException {
         List<Subject> subjects = new ArrayList<>();
         while (resultSet.next()) {
             int id = resultSet.getInt(1);
@@ -236,10 +243,13 @@ public class DaoSubject {
         }
     }
 
-    public void enrollUserInSubject(String username, int subjectId) throws DAOException {
+    public void enrollUserInSubject(String username, int subjectId)
+            throws DAOException {
         try {
             Person person = daoPerson.getByLogin(username);
-            String query = "INSERT INTO person_subject(id_person, id_subject, person_role) VALUES (?, ?, 'STUDENT')";
+            String query = "INSERT INTO person_subject"
+                    + "(id_person, id_subject, person_role)"
+                    + "VALUES (?, ?, 'STUDENT')";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, person.getId());
             statement.setInt(2, subjectId);

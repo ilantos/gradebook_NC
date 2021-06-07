@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/api/subjects")
@@ -31,74 +30,95 @@ public class ApiSubjectController {
     private CustomFormatResponseBody customFormatResponseBody;
 
     @Autowired
-    public ApiSubjectController(DaoSubject daoSubject, CustomFormatResponseBody customFormatResponseBody) {
+    public ApiSubjectController(DaoSubject daoSubject,
+                                CustomFormatResponseBody
+                                        customFormatResponseBody) {
         this.daoSubject = daoSubject;
         this.customFormatResponseBody = customFormatResponseBody;
     }
 
     @GetMapping
     @ResponseBody
-    public String getSubjects(@RequestParam(required = false) Integer lessonId) throws DAOException, JsonProcessingException {
-        Objects response;
-        if (lessonId == null) {
-            return customFormatResponseBody.buildResponse(true, daoSubject.getAll());
-        } else {
-            return customFormatResponseBody.buildResponse(true, daoSubject.getByLessonId(lessonId));
-        }
+    public String getSubjects() throws DAOException, JsonProcessingException {
+        List<Subject> subjectList = daoSubject.getAll();
+        return customFormatResponseBody.buildResponse(true, subjectList);
     }
 
     @GetMapping("teaching/{login}")
     @ResponseBody
-    public String teachingSubjects(@PathVariable String login) throws DAOException, JsonProcessingException {
-        List<Subject> subjects = daoSubject.getByLoginAndRole(login, StudyRole.TEACHER);
+    public String teachingSubjects(@PathVariable String login)
+            throws DAOException, JsonProcessingException {
+        List<Subject> subjects = daoSubject
+                .getByLoginAndRole(login, StudyRole.TEACHER);
         return customFormatResponseBody.buildResponse(true, subjects);
     }
 
     @GetMapping("studying/{login}")
     @ResponseBody
-    public String studyingSubjects(@PathVariable String login) throws DAOException, JsonProcessingException {
-        List<Subject> subjects = daoSubject.getByLoginAndRole(login, StudyRole.STUDENT);
+    public String studyingSubjects(@PathVariable String login)
+            throws DAOException, JsonProcessingException {
+        List<Subject> subjects = daoSubject
+                .getByLoginAndRole(login, StudyRole.STUDENT);
         return customFormatResponseBody.buildResponse(true, subjects);
     }
 
     @GetMapping("{id}")
     @ResponseBody
-    public String getSubjectById(@PathVariable int id) throws JsonProcessingException, DAOException {
+    public String getSubjectById(@PathVariable int id)
+            throws JsonProcessingException, DAOException {
         Subject subject = daoSubject.getById(id);
-        return subject != null ?
-                customFormatResponseBody.buildResponse(true, subject) :
-                customFormatResponseBody.buildResponse(
+        return subject != null
+                ? customFormatResponseBody.buildResponse(true, subject)
+                : customFormatResponseBody.buildResponse(
                         false,
                         "Cannot find location by id");
     }
 
     @GetMapping("/{id}/studying")
     @ResponseBody
-    public String getSubjectWithGradesById(@PathVariable int id, Principal principal) throws JsonProcessingException, DAOException {
-        SubjectWithGrades subject = daoSubject.getWithGradesById(id, principal.getName());
-        return subject != null ?
-                customFormatResponseBody.buildResponse(true, subject) :
-                customFormatResponseBody.buildResponse(
+    public String getSubjectWithGradesById(@PathVariable int id,
+                                           Principal principal)
+            throws JsonProcessingException, DAOException {
+        SubjectWithGrades subject = daoSubject
+                .getWithGradesById(id, principal.getName());
+        System.out.println("Size lessons: " + subject.getLessons().size());
+        return subject != null
+                ? customFormatResponseBody.buildResponse(true, subject)
+                : customFormatResponseBody.buildResponse(
                         false,
                         "Cannot find location by id");
     }
     @PostMapping("/{username}/enroll")
     @ResponseBody
-    public String enrollUserInSubject(@PathVariable String username, @RequestParam int subjectId) throws JsonProcessingException {
+    public String enrollUserInSubject(@PathVariable String username,
+                                      @RequestParam int subjectId)
+            throws JsonProcessingException {
         try {
             daoSubject.enrollUserInSubject(username, subjectId);
-            return customFormatResponseBody.buildResponse(true, "User enrolled in subject");
+            return customFormatResponseBody
+                    .buildResponse(true, "User enrolled in subject");
         } catch (DAOException e) {
-            return customFormatResponseBody.buildResponse(false, "Can't enroll user \"" + username + "\" in subject ");
+            return customFormatResponseBody
+                    .buildResponse(false,
+                            "Can't enroll user \""
+                                    + username
+                                    + "\" in subject ");
         }
     }
     @GetMapping("/{username}/unrolledSubjects")
     @ResponseBody
-    public String getUnrolledSubjects(@PathVariable String username) throws JsonProcessingException {
+    public String getUnrolledSubjects(@PathVariable String username)
+            throws JsonProcessingException {
         try {
-            return customFormatResponseBody.buildResponse(true, daoSubject.getUnrolledSubjectsByUsername(username));
+            return customFormatResponseBody
+                    .buildResponse(true,
+                            daoSubject
+                                    .getUnrolledSubjectsByUsername(username));
         } catch (DAOException e) {
-            return customFormatResponseBody.buildResponse(false, "Can't get unrolled subjects: " + e.getMessage());
+            return customFormatResponseBody
+                    .buildResponse(false,
+                            "Can't get unrolled subjects: "
+                                    + e.getMessage());
         }
     }
     @DeleteMapping("{id}")
@@ -106,13 +126,16 @@ public class ApiSubjectController {
     public String delete(@PathVariable int id) throws JsonProcessingException {
         try {
             daoSubject.delete(id);
-            return customFormatResponseBody.buildResponse(true, "Subject deleted successfully");
+            return customFormatResponseBody
+                    .buildResponse(true, "Subject deleted successfully");
         } catch (DAOException e) {
-            return customFormatResponseBody.buildResponse(false, "Subject deleted unsuccessfully");
+            return customFormatResponseBody
+                    .buildResponse(false, "Subject deleted unsuccessfully");
         }
     }
     @PutMapping
-    public ResponseEntity<?> edit(@RequestBody Subject subject) throws JsonProcessingException {
+    public ResponseEntity<?> edit(@RequestBody Subject subject)
+            throws JsonProcessingException {
         try {
             daoSubject.edit(subject);
             return ResponseEntity.ok(
@@ -129,12 +152,15 @@ public class ApiSubjectController {
 
     @PostMapping
     @ResponseBody
-    public String add(@RequestBody Subject subject) throws JsonProcessingException {
+    public String add(@RequestBody Subject subject)
+            throws JsonProcessingException {
         try {
             daoSubject.add(subject);
-            return customFormatResponseBody.buildResponse(true, "Subject added successfully");
+            return customFormatResponseBody
+                    .buildResponse(true, "Subject added successfully");
         } catch (DAOException e) {
-            return customFormatResponseBody.buildResponse(false, "Subject added unsuccessfully");
+            return customFormatResponseBody
+                    .buildResponse(false, "Subject added unsuccessfully");
         }
     }
 }

@@ -66,8 +66,8 @@ public class DaoLesson {
                     + "        (select id_person from person where login = ?) "
                     + "    and lg.id_subject = ? ORDER BY l.start_date;";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(2, idSubject);
             statement.setString(1, login);
+            statement.setInt(2, idSubject);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
