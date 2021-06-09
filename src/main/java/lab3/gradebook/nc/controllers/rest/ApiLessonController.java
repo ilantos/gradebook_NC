@@ -8,6 +8,7 @@ import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
 import lab3.gradebook.nc.model.EditGradeRequest;
 import lab3.gradebook.nc.model.db.DAOException;
 import lab3.gradebook.nc.model.db.DaoLesson;
+import lab3.gradebook.nc.model.entities.AddNewLessonRequest;
 import lab3.gradebook.nc.model.entities.Lesson;
 import lab3.gradebook.nc.model.entities.Person;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Controller
@@ -124,9 +126,16 @@ public class ApiLessonController {
 
     @PostMapping
     @ResponseBody
-    public String add(@RequestBody Lesson lesson,
+    public String add(@RequestBody AddNewLessonRequest requestBody,
                       @RequestParam String subjectId)
             throws JsonProcessingException {
+        LocalDateTime startDate = LocalDateTime.parse(requestBody.getStartDate());
+        System.out.println(startDate);
+        Lesson lesson = new Lesson();
+        lesson.setTitle(requestBody.getTitle());
+        lesson.setDescription(requestBody.getDescription());
+        lesson.setMaxGrade(requestBody.getMaxGrade());
+        lesson.setStartDate(startDate);
         try {
             daoLesson.add(lesson, Integer.parseInt(subjectId));
             return customFormatResponseBody.buildResponse(

@@ -54,7 +54,8 @@ function requestToAdd() {
     let title = $('#form-title').val();
     let description = $("#form-description" ).val();
     let maxGrade =  $('#form-max-grade').val();
-    let data = {title:title, description:description, maxGrade:maxGrade};
+    let startDate = $('#form-start-date').val();
+    let data = {title:title, description:description, maxGrade:maxGrade, startDate:startDate};
     window.location.href = "/subjects/" + subjectID;
     $.ajax({
         url:"/api/lessons?subjectId=" + subjectID,
