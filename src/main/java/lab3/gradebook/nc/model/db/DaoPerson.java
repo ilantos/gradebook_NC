@@ -51,10 +51,41 @@ public class DaoPerson {
     public Person getById(int idPerson) throws DAOException {
         Person person = null;
         try {
-            String query = "SELECT * FROM person" +
-                    " WHERE id_person = ?;";
+            String query = "SELECT * FROM person"
+                    + " WHERE id_person = ?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, idPerson);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                person = new Person(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getBoolean(9)
+                );
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        }
+        return person;
+    }
+
+    public Person getTeacherOfSubject(int id) throws DAOException {
+        Person person = null;
+        try {
+            String query = "select p.* "
+                    + "  from person p "
+                    + "  join person_subject ps on p.id_person = ps.id_person"
+                    + " where ps.id_subject = ?"
+                    + "and ps.person_role = 'TEACHER';";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
@@ -79,8 +110,8 @@ public class DaoPerson {
     public Person getByLogin(String login) throws DAOException {
         Person person = null;
         try {
-            String query = "SELECT * FROM person" +
-                    " WHERE login = ?;";
+            String query = "SELECT * FROM person"
+                    + " WHERE login = ?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, login);
             ResultSet resultSet = statement.executeQuery();
@@ -106,9 +137,9 @@ public class DaoPerson {
 
     public void edit(Person person) throws DAOException {
         try {
-            String query = "UPDATE person" +
-                            "  SET first_name=?, last_name=?, patronymic=?" +
-                            "WHERE id_person=?;";
+            String query = "UPDATE person"
+                            + "  SET first_name=?, last_name=?, patronymic=?"
+                            + "WHERE id_person=?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, person.getFirstName());
             statement.setString(2, person.getLastName());
@@ -134,8 +165,9 @@ public class DaoPerson {
     public void add(Person person) throws DAOException {
         try {
             String query =
-                    "INSERT INTO person (id_location, first_name, last_name, patronymic, login, password, email, is_admin)" +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                    "INSERT INTO person (id_location, first_name, last_name,"
+                            + "patronymic, login, password, email, is_admin)"
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, person.getIdLocation());
             statement.setString(2, person.getFirstName());
@@ -151,17 +183,19 @@ public class DaoPerson {
         }
     }
 
-    public List<ScheduleEntry> getSchedule(String username) throws DAOException {
+    public List<ScheduleEntry> getSchedule(String username)
+            throws DAOException {
         List<ScheduleEntry> scheduleList = new ArrayList<>();
         try {
-            String query = "SELECT s.title, l.*\n" +
-                    "FROM person p\n" +
-                    "JOIN person_subject ps on p.id_person = ps.id_person\n" +
-                    "JOIN subject s on ps.id_subject = s.id_subject\n" +
-                    "JOIN lesson l on s.id_subject = l.id_subject\n" +
-                    "WHERE p.login = ?\n" +
-                    "ORDER BY l.start_date;";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            String query = "SELECT s.title, l.* "
+                    + "FROM person p "
+                    + "JOIN person_subject ps on p.id_person = ps.id_person "
+                    + "JOIN subject s on ps.id_subject = s.id_subject "
+                    + "JOIN lesson l on s.id_subject = l.id_subject "
+                    + "WHERE p.login = ? "
+                    + "ORDER BY l.start_date;";
+            PreparedStatement preparedStatement
+                    = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -171,9 +205,17 @@ public class DaoPerson {
                 String lessonTitle = resultSet.getString(4);
                 String description = resultSet.getString("description");
                 float maxGrade = resultSet.getFloat("max_grade");
-                LocalDateTime creationDate = resultSet.getTimestamp("creation_date").toLocalDateTime();
-                LocalDateTime startDate = resultSet.getTimestamp("start_date").toLocalDateTime();
-                Lesson lesson = new Lesson(id, lessonTitle, description, maxGrade, creationDate, startDate);
+                LocalDateTime creationDate = resultSet
+                        .getTimestamp("creation_date").toLocalDateTime();
+                LocalDateTime startDate = resultSet
+                        .getTimestamp("start_date").toLocalDateTime();
+                Lesson lesson = new Lesson(id,
+                        lessonTitle,
+                        description,
+                        maxGrade,
+                        creationDate,
+                        startDate
+                );
                 scheduleList.add(new ScheduleEntry(subjectTitle, lesson));
             }
         } catch (SQLException e) {

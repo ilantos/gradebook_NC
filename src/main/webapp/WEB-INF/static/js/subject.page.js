@@ -1,7 +1,28 @@
 const subjectId = getCookie("idSubject");
 $(document).ready(function () {
     subjectPage(subjectId);
+    teacherOfSubject(subjectId);
 });
+
+function teacherOfSubject(id) {
+    console.log('searching teacher of subject (id:' + id + ')');
+    $.ajax({
+        url:"/api/subjects/" + id + "/teacher",
+        type:"get",
+        async: false,
+        complete: [
+            function (response) {
+                let answer = $.parseJSON(response.responseText);
+                console.log(answer);
+                if (answer.response == true) {
+                    $('#subject-page-teacher').text(answer.message);
+                } else {
+                    alert("Some problems at server");
+                }
+            }
+        ]
+    });
+}
 
 function subjectPage(id) {
     console.log(id);

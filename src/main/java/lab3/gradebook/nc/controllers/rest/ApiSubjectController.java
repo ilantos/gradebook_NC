@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lab3.gradebook.nc.controllers.utils.CustomFormatResponseBody;
 import lab3.gradebook.nc.model.StudyRole;
 import lab3.gradebook.nc.model.db.DAOException;
+import lab3.gradebook.nc.model.db.DaoPerson;
 import lab3.gradebook.nc.model.db.DaoSubject;
+import lab3.gradebook.nc.model.entities.Person;
 import lab3.gradebook.nc.model.entities.SubjectWithGrades;
 import lab3.gradebook.nc.model.entities.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +29,16 @@ import java.util.List;
 @RequestMapping("/api/subjects")
 public class ApiSubjectController {
     private DaoSubject daoSubject;
+    private DaoPerson daoPerson;
     private CustomFormatResponseBody customFormatResponseBody;
 
     @Autowired
     public ApiSubjectController(DaoSubject daoSubject,
+                                DaoPerson daoPerson,
                                 CustomFormatResponseBody
-                                        customFormatResponseBody) {
+                                            customFormatResponseBody) {
         this.daoSubject = daoSubject;
+        this.daoPerson = daoPerson;
         this.customFormatResponseBody = customFormatResponseBody;
     }
 
@@ -74,6 +79,21 @@ public class ApiSubjectController {
                         "Cannot find location by id");
     }
 
+    @GetMapping("{id}/teacher")
+    @ResponseBody
+    public String getTeacherOfSubject(@PathVariable int id)
+            throws DAOException, JsonProcessingException {
+        Person teacher = daoPerson.getTeacherOfSubject(id);
+        return teacher != null
+                ? customFormatResponseBody.buildResponse(true,
+                teacher.getFirstName() + " "
+                        + teacher.getLastName() + " "
+                        + teacher.getPatronymic())
+                : customFormatResponseBody.buildResponse(
+                false,
+                "Cannot find teacher");
+    }
+
     @GetMapping("/{id}/studying")
     @ResponseBody
     public String getSubjectWithGradesById(@PathVariable int id,
@@ -81,7 +101,6 @@ public class ApiSubjectController {
             throws JsonProcessingException, DAOException {
         SubjectWithGrades subject = daoSubject
                 .getWithGradesById(id, principal.getName());
-        System.out.println("Size lessons: " + subject.getLessons().size());
         return subject != null
                 ? customFormatResponseBody.buildResponse(true, subject)
                 : customFormatResponseBody.buildResponse(
