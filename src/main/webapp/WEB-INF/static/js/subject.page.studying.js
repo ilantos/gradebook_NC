@@ -38,6 +38,14 @@ function subjectPage(id) {
                     let subject = answer.message;
                     $('#subject-page-title').text(subject.title);
                     $('#subject-page-description').text(subject.description);
+                    let sumMaxGrades = Number(subject.sumMaxGrades);
+                    let targetGrade = Number(subject.targetGrade);
+                    let sumStudentGrades = Number(subject.sumStudentGrades);
+                    let gradesInfo = 'Sum of lesson\'s grades: ' + sumMaxGrades
+                        + ' .Target grade: '+ targetGrade
+                        + '\nSum student grades: ' + sumStudentGrades
+                        +'. Success percent: ' + (sumStudentGrades / sumMaxGrades * 100);
+                    $('#subject-grades-info').text(gradesInfo);
                     renderLessons(subject.lessons);
                 } else {
                     alert("Some problems at server");

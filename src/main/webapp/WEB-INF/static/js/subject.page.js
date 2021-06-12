@@ -38,6 +38,9 @@ function subjectPage(id) {
                     let subject = answer.message;
                     $('#subject-page-title').text(subject.title);
                     $('#subject-page-description').text(subject.description);
+                    let gradesInfo = 'Sum of lesson\'s grades: ' + subject.sumMaxGrades
+                        + ' .Target grade: ' + subject.targetGrade;
+                    $('#subject-grades-info').text(gradesInfo);
                     renderLessons(subject.lessons);
                 } else {
                     alert("Some problems at server");

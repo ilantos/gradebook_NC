@@ -17,5 +17,13 @@ public class Subject extends AbstractSubject {
                    List<Lesson> lessons) {
         super(id, title, description);
         this.lessons = lessons;
+        if (lessons != null && lessons.size() != 0) {
+            double sumMaxGrades = 0;
+            for (Lesson lesson: lessons) {
+                sumMaxGrades += lesson.getMaxGrade();
+            }
+            setSumMaxGrades(sumMaxGrades);
+            setTargetGrade(sumMaxGrades * 0.60);
+        }
     }
 }
