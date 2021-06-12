@@ -23,7 +23,7 @@ public class MainController {
     public String homepage(HttpServletResponse response) {
         response.addCookie(new Cookie("username", getCurrentUser()));
         response.addCookie(new Cookie("isAdmin", "false"));
-        return "homepage";
+        return "forward:schedule";
     }
 
     @GetMapping("/locations")
