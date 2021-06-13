@@ -29,6 +29,7 @@ function renderSubject(subjects) {
             '            <th scope="row">'+ (key + 1) +'</th>' +
             '            <td><a class="link-secondary" onclick="location.href = \'/subjects/'+ value.id +'\';">' + value.title + '</a></td>' +
             '            <td>' + value.description + '</td>' +
+            '            <td><button type="button" class="btn btn-info" onclick="location.href=\'/students?subject_id=' + value.id + '\'">Students</button></td>' +
             '            <td>' +
             '                <button type="button" class="btn btn-danger" onclick="removeSubject(' + value.id + ')">Delete</button>' +
             '            </td>' +

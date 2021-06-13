@@ -221,16 +221,16 @@ public class DaoLesson {
             String query =
                     "INSERT INTO lesson("
                             + "id_subject, title, description, max_grade, start_date)"
-                            + "VALUES (?, ?, ?, ?);";
+                            + "VALUES (?, ?, ?, ?, ?);";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, subjectId);
             statement.setString(2, lesson.getTitle());
             statement.setString(3, lesson.getDescription());
             statement.setFloat(4, lesson.getMaxGrade());
-            statement.setTimestamp(4, Timestamp.valueOf(lesson.getStartDate()));
+            statement.setTimestamp(5, Timestamp.valueOf(lesson.getStartDate()));
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot get all lessons", e);
+            throw new DAOException("Cannot add new lesson", e);
         }
     }
 }
