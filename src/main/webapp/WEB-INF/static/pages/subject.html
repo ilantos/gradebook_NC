@@ -38,7 +38,7 @@
                     </table>
                 </div>
                 <div class="col-1">
-                    <button id="cancel-button" class="btn btn-danger" onclick="location.href='/subjects';">Cancel</button>
+                    <button id="cancel-button" class="btn btn-danger" onclick="window.history.back();">Cancel</button>
                 </div>
             </div>
         </div>
@@ -47,15 +47,6 @@
         <script src="/resources/subjects.js"></script>
         <script src="/resources/subject.page.js"></script>
         <script src="/resources/lessons.js"></script>
-        <script>
-            $(document).ready(function () {
-                let isAdmin = getCookie('isAdmin');
-                if (isAdmin == true) {
-                    $("#cancel-button").attr('onclick', 'location.href=\'/subjects\'');
-                } else {
-                    $("#cancel-button").attr('onclick', 'location.href=\'/teaching\'');
-                }
-            });
-        </script>
+
     </body>
 </html>
