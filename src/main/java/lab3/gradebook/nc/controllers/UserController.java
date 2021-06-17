@@ -100,4 +100,9 @@ UserController {
                             e.getMessage()));
         }
     }
+    @GetMapping("/students")
+    public String getSubjectStudents(@RequestParam String subject_id, HttpServletResponse response) {
+        response.addCookie(new Cookie("subject_id", subject_id));
+        return "/pages/students";
+    }
 }

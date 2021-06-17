@@ -64,6 +64,7 @@ public class MainController {
     }
     @GetMapping("/schedule")
     public String userSchedulePage(HttpServletResponse response) {
+        response.addCookie(new Cookie("username", getCurrentUser()));
         response.addCookie(new Cookie("personMode", "student"));
         return "pages/schedule";
     }

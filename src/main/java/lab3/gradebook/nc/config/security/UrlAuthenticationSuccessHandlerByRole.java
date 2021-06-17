@@ -46,7 +46,7 @@ public class UrlAuthenticationSuccessHandlerByRole
 
     protected String determineTargetUrl(final Authentication authentication) {
         Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_USER", "/homepage");
+        roleTargetUrlMap.put("ROLE_USER", "/schedule");
         //TODO изменить / на /admin. Но пока пусть так
         roleTargetUrlMap.put("ROLE_ADMIN", "/");
 
