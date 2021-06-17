@@ -1,5 +1,6 @@
 package lab3.gradebook.nc.model.db;
 
+import lab3.gradebook.nc.model.StudyRole;
 import lab3.gradebook.nc.model.entities.Lesson;
 import lab3.gradebook.nc.model.entities.Person;
 import lab3.gradebook.nc.model.entities.ScheduleEntry;
@@ -187,7 +188,7 @@ public class DaoPerson {
             throws DAOException {
         List<ScheduleEntry> scheduleList = new ArrayList<>();
         try {
-            String query = "SELECT s.title, l.* "
+            String query = "SELECT s.title, l.*, ps.person_role, s.id_subject "
                     + "FROM person p "
                     + "JOIN person_subject ps on p.id_person = ps.id_person "
                     + "JOIN subject s on ps.id_subject = s.id_subject "
@@ -216,7 +217,15 @@ public class DaoPerson {
                         creationDate,
                         startDate
                 );
-                scheduleList.add(new ScheduleEntry(subjectTitle, lesson));
+                StudyRole role = StudyRole.valueOf(resultSet
+                        .getString("person_role"));
+                int subjectId = resultSet.getInt("id_subject");
+                scheduleList.add(
+                        new ScheduleEntry(
+                                subjectId,
+                                subjectTitle,
+                                lesson,
+                                role));
             }
         } catch (SQLException e) {
             throw new DAOException(e.getMessage(), e);

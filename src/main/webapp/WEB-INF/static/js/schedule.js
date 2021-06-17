@@ -21,10 +21,19 @@ function getSchedule() {
 }
 function renderSchedule(schedule) {
     $.each(schedule, function(key, value) {
+        let subjectHref;
+        let lessonHref = 'onclick="location.href = \'/lessons/' + value.lesson.id+ '\';"';
+        if (value.role === 'TEACHER') {
+            subjectHref = 'onclick="location.href = \'/subjects/' + value.subjectId+ '\';"';
+
+        }
+        if (value.role === 'STUDENT') {
+            subjectHref = 'onclick="location.href = \'/studying/subjects/' + value.subjectId+ '\';"';
+        }
         $('#schedule-table').append('<tr id="subject-' + value.id + '">' +
             '            <th>'+ dateTimeFromLocalDateTime(value.lesson.startDate) +'</th>' +
-            '            <td>' + value.subjectName + '</td>' +
-            '            <td>' + value.lesson.title + '</td>' +
+            '            <td> <a class="link-secondary" '+ subjectHref + '>' + value.subjectName + '</a></td>' +
+            '            <td> <a class="link-secondary" ' + lessonHref + '>' + value.lesson.title + '</a></td>' +
             '        </tr>');
     });
 }
