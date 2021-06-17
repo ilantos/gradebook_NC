@@ -220,7 +220,7 @@ public class DaoSubject {
 
     public void delete(int id) throws DAOException {
         try {
-            String query = "DELETE FROM subject" + " WHERE id_subject=?;";
+            String query = "DELETE FROM subject WHERE id_subject=?;";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -256,6 +256,47 @@ public class DaoSubject {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("", e);
+        }
+    }
+
+    public List<Person> getStudentsBySubjectId(int subjectId) throws DAOException {
+        List<Person> personList = new ArrayList<>();
+        try {
+            String query = "SELECT p.* FROM person_subject p_s\n" +
+                    "JOIN person p\n" +
+                    "ON p_s.id_person = p.id_person\n" +
+                    "WHERE p_s.id_subject = ? AND person_role = 'STUDENT';";
+            PreparedStatement preparedStatement
+                    = connection.prepareStatement(query);
+            preparedStatement.setInt(1, subjectId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                personList.add(new Person(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getString(8),
+                        resultSet.getBoolean(9)
+                ));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Cannot find students of this subject", e);
+        }
+        return personList;
+    }
+    public void deleteStudentFromSubject(int studentId, int subjectId) throws DAOException {
+        try {
+            String query = "DELETE FROM person_subject WHERE id_person = ? AND id_subject = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, studentId);
+            preparedStatement.setInt(2, subjectId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("Cannot delete student from subject(studentId = " + studentId + ", subjectId = " + subjectId);
         }
     }
 }
