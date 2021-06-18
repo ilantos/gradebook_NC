@@ -1,8 +1,16 @@
-Gradebook project. Spring MVC
 
-Configuration in application.properties
-http.server=[tomcat|remote-weblogic]
-db.url
-db.username
-db.password
-db.driver.class
+█▀▀▀ █▀▀█ █▀▀█ █▀▀▄ █▀▀ █▀▀▄ █▀▀█ █▀▀█ █░█ 
+█░▀█ █▄▄▀ █▄▄█ █░░█ █▀▀ █▀▀▄ █░░█ █░░█ █▀▄ 
+▀▀▀▀ ▀░▀▀ ▀░░▀ ▀▀▀░ ▀▀▀ ▀▀▀░ ▀▀▀▀ ▀▀▀▀ ▀░▀
+
+🅙🅐🅥🅐. 🅢🅟🅡🅘🅝🅖 🅜🅥🅒
+-----------------------------------
+***TEST USERS***
+*Admin mode*
+   - login: admin
+   - password: password
+
+*Usual mode*
+   - login: petro / vasya 
+   - password: password
+ 
