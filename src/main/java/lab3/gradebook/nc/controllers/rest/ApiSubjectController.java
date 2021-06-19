@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
 
@@ -171,10 +173,18 @@ public class ApiSubjectController {
 
     @PostMapping
     @ResponseBody
-    public String add(@RequestBody Subject subject)
+    public String add(@RequestBody Subject subject,
+                      HttpServletRequest servletRequest,
+                      Principal principal)
             throws JsonProcessingException {
         try {
-            daoSubject.add(subject);
+            Cookie[] cookies = servletRequest.getCookies();
+            for (Cookie cookie: cookies) {
+                if (cookie.getName().equals("isAdmin")) {
+                    if (cookie.getValue().equals("false")) daoSubject.add(subject, principal.getName());
+                    else daoSubject.add(subject);
+                }
+            }
             return customFormatResponseBody
                     .buildResponse(true, "Subject added successfully");
         } catch (DAOException e) {

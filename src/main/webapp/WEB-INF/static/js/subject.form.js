@@ -9,13 +9,22 @@ function configureTemplateByCookie () {
         $('#form-button-submit').attr('onclick', 'requestToEdit()');
         $('#form-headline').text("Edit subject");
         console.log("cookie: " + getCookie("idSubject"));
-        id = getCookie("idSubject");
+        let id = getCookie("idSubject");
         editSubject(id);
     }
     if (getCookie("formSubject") === "add") {
         $('#form-button-submit').text('Add');
         $('#form-button-submit').attr('onclick', 'requestToAdd()');
         $('#form-headline').text("Add subject");
+
+        let isAdmin = getCookie("isAdmin");
+        let action;
+        if (isAdmin == 'true') {
+            action = "/subjects";
+        } else {
+            action = "/teaching";
+        }
+        $('#form-subject').attr("action", action);
     }
 }
 
@@ -87,5 +96,4 @@ function requestToAdd() {
             }
         ]
     });
-    window.location.href = "/subjects";
 }

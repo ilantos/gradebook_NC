@@ -228,6 +228,7 @@ public class DaoSubject {
             throw new DAOException("Cannot get all subjects", e);
         }
     }
+
     public void add(Subject subject) throws DAOException {
         try {
             String query =
@@ -239,7 +240,21 @@ public class DaoSubject {
             statement.setString(2, subject.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot get all subjects", e);
+            throw new DAOException("Cannot add the subject", e);
+        }
+    }
+
+    public void add(Subject subject, String teacher) throws DAOException {
+        try {
+            String query = "select addSubjectByTeacher(?, ?, ?);";
+            CallableStatement statement = connection.prepareCall(query);
+            statement.setString(1, subject.getTitle());
+            statement.setString(2, subject.getDescription());
+            statement.setString(3, teacher);
+            statement.execute();
+
+        } catch (SQLException e) {
+            throw new DAOException("Cannot add subject by teacher", e);
         }
     }
 

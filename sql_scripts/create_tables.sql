@@ -67,3 +67,16 @@ CREATE TRIGGER insert_lesson_grade
 AFTER INSERT ON person_subject 
 FOR EACH ROW 
 EXECUTE PROCEDURE insert_lesson_grade();
+
+CREATE OR REPLACE FUNCTION addSubjectByTeacher(title VARCHAR, description VARCHAR, teacherLogin VARCHAR) RETURNS real AS $$
+DECLARE
+new_id INTEGER;
+BEGIN
+    SELECT nextval ('subject_id_subject_seq') INTO new_id;
+    INSERT INTO subject (id_subject, title, description)
+        VALUES (new_id, title, description);
+    INSERT INTO person_subject (id_person, id_subject, person_role)
+        VALUES ((SELECT id_person FROM person WHERE login = teacherLogin), new_id, 'TEACHER');
+    RETURN new_id;
+END;
+$$ LANGUAGE plpgsql;
