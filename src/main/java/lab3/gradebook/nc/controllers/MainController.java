@@ -54,18 +54,21 @@ public class MainController {
     @GetMapping("/teaching")
     public String subjectsPageTeaching(HttpServletResponse response) {
         response.addCookie(new Cookie("personMode", "teacher"));
+        response.addCookie(new Cookie("isAdmin", "false"));
         return "pages/subjects_teaching";
     }
 
     @GetMapping("/studying")
     public String subjectsPageStudying(HttpServletResponse response) {
         response.addCookie(new Cookie("personMode", "student"));
+        response.addCookie(new Cookie("isAdmin", "false"));
         return "pages/subjects_studying";
     }
     @GetMapping("/schedule")
     public String userSchedulePage(HttpServletResponse response) {
         response.addCookie(new Cookie("username", getCurrentUser()));
         response.addCookie(new Cookie("personMode", "student"));
+        response.addCookie(new Cookie("isAdmin", "false"));
         return "pages/schedule";
     }
 
